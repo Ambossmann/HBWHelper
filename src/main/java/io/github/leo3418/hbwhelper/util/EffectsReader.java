@@ -87,7 +87,7 @@ public class EffectsReader {
      * @return duration of the potion effect as how they are shown in the client
      */
     public static String getDisplayedDuration(MobEffectInstance potionEffect) {
-        return MobEffectUtil.formatDuration(potionEffect, 1.0F);
+        return MobEffectUtil.formatDuration(potionEffect, 1.0F).getString();
     }
 
     /**

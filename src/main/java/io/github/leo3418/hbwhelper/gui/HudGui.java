@@ -363,7 +363,7 @@ public class HudGui extends GuiComponent {
         // Removes black background of the first icon rendered
         RenderSystem.enableBlend();
         blit(matrixStack, configManager.hudX(), currentHeight,
-                this.getBlitOffset(),
+                0,
                 EFFECT_ICON_SIZE, EFFECT_ICON_SIZE, icon);
         drawString(matrixStack, mc.font, " " + text,
                 EFFECT_ICON_SIZE + configManager.hudX(),
@@ -387,7 +387,7 @@ public class HudGui extends GuiComponent {
      */
     private void drawItemIconAndString(ItemStack itemStack, String text) {
 //        Lighting.turnBackOn();
-        mc.getItemRenderer().renderAndDecorateItem(itemStack,
+        mc.getItemRenderer().renderAndDecorateItem(matrixStack, itemStack,
                 configManager.hudX() + (EFFECT_ICON_SIZE - ITEM_ICON_SIZE) / 2,
                 currentHeight);
 //        Lighting.turnOff();
@@ -414,7 +414,7 @@ public class HudGui extends GuiComponent {
                 + (EFFECT_ICON_SIZE - ITEM_ICON_SIZE) / 2;
 //        Lighting.turnBackOn();
         for (ItemStack itemStack : itemStacks) {
-            mc.getItemRenderer().renderAndDecorateItem(itemStack,
+            mc.getItemRenderer().renderAndDecorateItem(matrixStack, itemStack,
                     currentWidth, currentHeight);
             currentWidth += ITEM_ICON_SIZE + 1;
         }
