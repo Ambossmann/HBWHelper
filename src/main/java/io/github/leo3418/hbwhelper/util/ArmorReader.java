@@ -26,11 +26,11 @@
 package io.github.leo3418.hbwhelper.util;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.enchantment.Enchantments;
-import net.minecraft.item.ArmorItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.item.enchantment.Enchantments;
+import net.minecraft.world.item.ArmorItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 
 import java.util.Objects;
 
@@ -93,7 +93,7 @@ public class ArmorReader {
      * @return an {@code ItemStack} object which represents the player's armor
      */
     public static ItemStack getArmorStack() {
-        return Objects.requireNonNull(Minecraft.getInstance().player).inventory
+        return Objects.requireNonNull(Minecraft.getInstance().player).getInventory()
                 .getArmor(BOOTS_INDEX);
     }
 

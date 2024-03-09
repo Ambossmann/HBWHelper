@@ -25,7 +25,7 @@
 
 package io.github.leo3418.hbwhelper.gui;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import io.github.leo3418.hbwhelper.ConfigManager;
 import io.github.leo3418.hbwhelper.game.CountedTrap;
@@ -34,19 +34,20 @@ import io.github.leo3418.hbwhelper.util.ArmorReader;
 import io.github.leo3418.hbwhelper.util.EffectsReader;
 import io.github.leo3418.hbwhelper.util.GameDetector;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.AbstractGui;
-import net.minecraft.client.gui.screen.ChatScreen;
-import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.client.gui.screens.ChatScreen;
+import com.mojang.blaze3d.platform.Lighting;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.item.ItemStack;
-import net.minecraft.potion.EffectInstance;
+import net.minecraft.client.resources.language.I18n;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import net.minecraftforge.client.gui.ForgeIngameGui;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static net.minecraft.item.Items.*;
+import static net.minecraft.world.item.Items.*;
 
 /**
  * The GUI of this mod shown in Minecraft's Head-Up Display (HUD).
@@ -58,7 +59,7 @@ import static net.minecraft.item.Items.*;
  * @see <a href="https://minecraft.gamepedia.com/Heads-up_display"
  *         target="_top">Minecraft Wiki's introduction on Minecraft's HUD</a>
  */
-public class HudGui extends AbstractGui {
+public class HudGui extends GuiComponent {
     /**
      * Color of text displayed on this GUI
      */
@@ -128,7 +129,7 @@ public class HudGui extends AbstractGui {
     /**
      * The matrix stack used in GUI rendering
      */
-    private final MatrixStack matrixStack;
+    private final PoseStack matrixStack;
 
     /**
      * Height of the next line of text that would be rendered
@@ -144,7 +145,7 @@ public class HudGui extends AbstractGui {
         gameDetector = GameDetector.getInstance();
         configManager = ConfigManager.getInstance();
         currentHeight = configManager.hudY();
-        matrixStack = new MatrixStack();
+        matrixStack = new PoseStack();
     }
 
     /**
@@ -164,7 +165,7 @@ public class HudGui extends AbstractGui {
      *
      * @param event the event called when an element on the HUD is rendered
      */
-    public void render(RenderGameOverlayEvent.Post event) {
+    public void render(RenderGameOverlayEvent.PostLayer event) {
         /*
         We only need to render this GUI per one object's rendering on the HUD,
         or some vanilla elements on the HUD might not display correctly. We
@@ -173,8 +174,7 @@ public class HudGui extends AbstractGui {
         information, the HUD only renders when neither chat screen nor debug
         screen shows.
          */
-        if (shouldRender() && event.getType() ==
-                RenderGameOverlayEvent.ElementType.HOTBAR) {
+        if (shouldRender() && event.getOverlay() == ForgeIngameGui.HOTBAR_ELEMENT) {
             if (gameDetector.isIn()) {
                 renderGameInfo();
                 renderArmorInfo();
@@ -221,7 +221,7 @@ public class HudGui extends AbstractGui {
      */
     private void renderEffectsInfo() {
         if (configManager.showEffectsInfo()) {
-            for (EffectInstance potionEffect : EffectsReader.getEffects()) {
+            for (MobEffectInstance potionEffect : EffectsReader.getEffects()) {
                 TextureAtlasSprite icon = EffectsReader.getIcon(potionEffect);
 
                 String effectInfo = "";
@@ -353,7 +353,7 @@ public class HudGui extends AbstractGui {
      */
     private void drawEffectIconAndString(TextureAtlasSprite icon, String text) {
         mc.getTextureManager()
-                .bind(icon.atlas().location());
+                .bindForSetup(icon.atlas().location());
         // Removes black background of the first icon rendered
         RenderSystem.enableBlend();
         blit(matrixStack, configManager.hudX(), currentHeight,
@@ -380,11 +380,11 @@ public class HudGui extends AbstractGui {
      * @param text the text to be rendered
      */
     private void drawItemIconAndString(ItemStack itemStack, String text) {
-        RenderHelper.turnBackOn();
+//        Lighting.turnBackOn();
         mc.getItemRenderer().renderAndDecorateItem(itemStack,
                 configManager.hudX() + (EFFECT_ICON_SIZE - ITEM_ICON_SIZE) / 2,
                 currentHeight);
-        RenderHelper.turnOff();
+//        Lighting.turnOff();
         drawString(matrixStack, mc.font, " " + text,
                 ITEM_ICON_SIZE + configManager.hudX(),
                 currentHeight + (ITEM_ICON_SIZE - LINE_HEIGHT) / 2 + 1,
@@ -406,13 +406,13 @@ public class HudGui extends AbstractGui {
     private void drawItemIcons(List<ItemStack> itemStacks) {
         int currentWidth = configManager.hudX()
                 + (EFFECT_ICON_SIZE - ITEM_ICON_SIZE) / 2;
-        RenderHelper.turnBackOn();
+//        Lighting.turnBackOn();
         for (ItemStack itemStack : itemStacks) {
             mc.getItemRenderer().renderAndDecorateItem(itemStack,
                     currentWidth, currentHeight);
             currentWidth += ITEM_ICON_SIZE + 1;
         }
-        RenderHelper.turnOff();
+//        Lighting.turnOff();
         if (!itemStacks.isEmpty()) {
             currentHeight += ITEM_ICON_SIZE + 1;
         }

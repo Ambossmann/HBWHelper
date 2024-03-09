@@ -25,15 +25,17 @@
 
 package io.github.leo3418.hbwhelper.util;
 
-import net.minecraft.util.text.Color;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.Style;
-import net.minecraft.util.text.TextFormatting;
+import net.minecraft.network.chat.TextColor;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
+import net.minecraft.ChatFormatting;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
 import static java.util.AbstractMap.SimpleImmutableEntry;
+
+import java.util.AbstractMap.SimpleImmutableEntry;
 
 /**
  * Provides methods that operate on {@linkplain ITextComponent text component
@@ -48,8 +50,8 @@ public class TextComponents {
      * ({@code §})
      */
     private static final Map<Integer, String> COLOR_INT_TO_CTRL_STR_MAP =
-            Collections.unmodifiableMap(Arrays.stream(TextFormatting.values())
-                    .filter(TextFormatting::isColor)
+            Collections.unmodifiableMap(Arrays.stream(ChatFormatting.values())
+                    .filter(ChatFormatting::isColor)
                     .map(textFormatting -> new SimpleImmutableEntry<>(
                             textFormatting.getColor(),
                             textFormatting.toString()
@@ -77,7 +79,7 @@ public class TextComponents {
      *         the {@code getFormattedText()} method in {@code ITextComponent}
      *         in Minecraft 1.16.
      */
-    public static String toFormattedText(ITextComponent textComponent) {
+    public static String toFormattedText(Component textComponent) {
         Objects.requireNonNull(textComponent, "textComponent");
         StringBuilder resultBuilder = new StringBuilder();
         String text = textComponent.getContents();
@@ -102,7 +104,7 @@ public class TextComponents {
     private static String formattingCodeOf(Style style) {
         Objects.requireNonNull(style, "style");
         StringBuilder formattingCodeBuilder = new StringBuilder();
-        Color color = style.getColor();
+        TextColor color = style.getColor();
         if (color != null) {
             int colorCode = color.getValue();
             formattingCodeBuilder.append(
@@ -110,23 +112,23 @@ public class TextComponents {
         }
         if (style.isObfuscated()) {
             formattingCodeBuilder.append(
-                    TextFormatting.OBFUSCATED.toString());
+                    ChatFormatting.OBFUSCATED.toString());
         }
         if (style.isBold()) {
             formattingCodeBuilder.append(
-                    TextFormatting.BOLD.toString());
+                    ChatFormatting.BOLD.toString());
         }
         if (style.isStrikethrough()) {
             formattingCodeBuilder.append(
-                    TextFormatting.STRIKETHROUGH.toString());
+                    ChatFormatting.STRIKETHROUGH.toString());
         }
         if (style.isUnderlined()) {
             formattingCodeBuilder.append(
-                    TextFormatting.UNDERLINE.toString());
+                    ChatFormatting.UNDERLINE.toString());
         }
         if (style.isItalic()) {
             formattingCodeBuilder.append(
-                    TextFormatting.ITALIC.toString());
+                    ChatFormatting.ITALIC.toString());
         }
         return formattingCodeBuilder.toString();
     }

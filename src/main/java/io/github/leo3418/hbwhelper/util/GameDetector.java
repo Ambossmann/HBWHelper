@@ -30,10 +30,10 @@ import io.github.leo3418.hbwhelper.event.ClientJoinInProgressGameEvent;
 import io.github.leo3418.hbwhelper.event.ClientLeaveGameEvent;
 import io.github.leo3418.hbwhelper.event.ClientRejoinGameEvent;
 import io.github.leo3418.hbwhelper.event.GameStartEvent;
-import net.minecraft.client.gui.screen.DownloadTerrainScreen;
+import net.minecraft.client.gui.screens.ReceivingLevelScreen;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
 import net.minecraftforge.client.event.ClientPlayerNetworkEvent;
-import net.minecraftforge.client.event.GuiOpenEvent;
+import net.minecraftforge.client.event.ScreenEvent;
 
 /**
  * Detects and tracks if client is in a Hypixel Bed Wars game.
@@ -138,8 +138,8 @@ public class GameDetector {
      * @param event the event fired when the screen with dirt background shows
      *         up
      */
-    public void update(GuiOpenEvent event) {
-        if (inBedWars && event.getGui() instanceof DownloadTerrainScreen) {
+    public void update(ScreenEvent.InitScreenEvent.Post event) {
+        if (inBedWars && event.getScreen() instanceof ReceivingLevelScreen) {
             inBedWars = false;
             EventManager.EVENT_BUS.post(new ClientLeaveGameEvent());
         }

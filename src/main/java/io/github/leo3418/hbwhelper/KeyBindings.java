@@ -26,8 +26,8 @@
 package io.github.leo3418.hbwhelper;
 
 import io.github.leo3418.hbwhelper.gui.QuickJoinMenuScreen;
-import net.minecraft.client.settings.KeyBinding;
-import net.minecraftforge.fml.client.registry.ClientRegistry;
+import net.minecraft.client.KeyMapping;
+import net.minecraftforge.client.ClientRegistry;
 
 /**
  * Stores all custom key bindings of this mod, and provides a method for
@@ -45,8 +45,8 @@ public class KeyBindings {
     /**
      * Key binding for toggling Bed Wars quick join menu
      */
-    public static final KeyBinding QUICK_JOIN =
-            new KeyBinding("key.hbwhelper.quickJoin",
+    public static final KeyMapping QUICK_JOIN =
+            new KeyMapping("key.hbwhelper.quickJoin",
                     DEFAULT_KEY_CODE_QUICK_JOIN,
                     "key.categories.misc");
 

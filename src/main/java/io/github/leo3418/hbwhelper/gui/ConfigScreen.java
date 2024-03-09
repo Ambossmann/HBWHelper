@@ -25,26 +25,15 @@
 
 package io.github.leo3418.hbwhelper.gui;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import io.github.leo3418.hbwhelper.ConfigManager;
 import io.github.leo3418.hbwhelper.HbwHelper;
-import io.github.leo3418.hbwhelper.game.DreamMode;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.button.Button;
-import net.minecraft.client.gui.widget.list.OptionsRowList;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.client.settings.BooleanOption;
-import net.minecraft.client.settings.IteratableOption;
-import net.minecraft.client.settings.SliderPercentageOption;
-import net.minecraft.util.Util;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.client.gui.components.OptionsList;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.TranslatableComponent;
 
 import javax.annotation.Nonnull;
 import java.util.Objects;
-
-import static io.github.leo3418.hbwhelper.gui.ButtonParameters.BUTTONS_INTERVAL;
-import static io.github.leo3418.hbwhelper.gui.ButtonParameters.BUTTON_HEIGHT;
 
 /**
  * The GUI of this mod's configuration screen.
@@ -103,7 +92,7 @@ public final class ConfigScreen extends Screen {
      * The object for registering options on this screen and controlling how
      * they are presented
      */
-    private OptionsRowList optionsRowList;
+    private OptionsList optionsRowList;
 
     /**
      * Constructs a new {@link ConfigScreen} instance.
@@ -111,7 +100,7 @@ public final class ConfigScreen extends Screen {
      * @param parentScreen the screen that will become this screen's parent
      */
     public ConfigScreen(Screen parentScreen) {
-        super(new TranslationTextComponent("hbwhelper.configGui.title",
+        super(new TranslatableComponent("hbwhelper.configGui.title",
                 HbwHelper.NAME));
         this.parentScreen = parentScreen;
     }
@@ -121,80 +110,80 @@ public final class ConfigScreen extends Screen {
      */
     @Override
     protected void init() {
-        this.optionsRowList = new OptionsRowList(
-                Objects.requireNonNull(this.minecraft), this.width, this.height,
-                OPTIONS_LIST_TOP_HEIGHT,
-                this.height - OPTIONS_LIST_BOTTOM_OFFSET,
-                OPTIONS_LIST_ITEM_HEIGHT);
-        this.optionsRowList.addBig(new BooleanOption(
-                "hbwhelper.configGui.showGenerationTimes.title",
-                unused -> CMI.showGenerationTimes(),
-                (unused, newValue) -> CMI.changeShowGenerationTimes(newValue)
-        ));
-        this.optionsRowList.addBig(new BooleanOption(
-                "hbwhelper.configGui.showTeamUpgrades.title",
-                unused -> CMI.showTeamUpgrades(),
-                (unused, newValue) -> CMI.changeShowTeamUpgrades(newValue)
-        ));
-        this.optionsRowList.addBig(new BooleanOption(
-                "hbwhelper.configGui.showArmorInfo.title",
-                unused -> CMI.showArmorInfo(),
-                (unused, newValue) -> CMI.changeShowArmorInfo(newValue)
-        ));
-        this.optionsRowList.addBig(new BooleanOption(
-                "hbwhelper.configGui.showEffectsInfo.title",
-                unused -> CMI.showEffectsInfo(),
-                (unused, newValue) -> CMI.changeShowEffectsInfo(newValue)
-        ));
-        this.optionsRowList.addBig(new BooleanOption(
-                "hbwhelper.configGui.alwaysShowEffects.title",
-                unused -> CMI.alwaysShowEffects(),
-                (unused, newValue) -> CMI.changeAlwaysShowEffects(newValue)
-        ));
-        this.optionsRowList.addBig(new SliderPercentageOption(
-                "hbwhelper.configGui.hudX.title",
-                0.0, this.width, 1.0F,
-                unused -> (double) CMI.hudX(),
-                (unused, newValue) -> CMI.changeHudX(newValue.intValue()),
-                (gs, option) -> new StringTextComponent(I18n.get(
-                        "hbwhelper.configGui.hudX.title"
-                ) + ": " + (int) option.get(gs))));
-        this.optionsRowList.addBig(new SliderPercentageOption(
-                "hbwhelper.configGui.hudY.title",
-                0.0, this.height, 1.0F,
-                unused -> (double) CMI.hudY(),
-                (unused, newValue) -> CMI.changeHudY(newValue.intValue()),
-                (gs, option) -> new StringTextComponent(I18n.get(
-                        "hbwhelper.configGui.hudY.title"
-                ) + ": " + (int) option.get(gs))));
-        this.optionsRowList.addBig(new IteratableOption(
-                "hbwhelper.configGui.currentDreamMode.title",
-                (unused, newValue) ->
-                        CMI.changeCurrentDreamMode(DreamMode.values()[
-                                (CMI.currentDreamMode().ordinal() + newValue)
-                                        % DreamMode.values().length]),
-                (unused, option) -> new StringTextComponent(I18n.get(
-                        "hbwhelper.configGui.currentDreamMode.title"
-                ) + ": " + I18n.get(
-                        CMI.currentDreamMode().getTranslateKey()
-                ))
-        ));
-        this.children.add(this.optionsRowList);
-
-        this.addButton(new Button(
-                (this.width - BUTTONS_INTERVAL) / 2 - BOTTOM_BUTTON_WIDTH,
-                this.height - BOTTOM_BUTTON_HEIGHT_OFFSET,
-                BOTTOM_BUTTON_WIDTH, BUTTON_HEIGHT,
-                new TranslationTextComponent("hbwhelper.configGui.moreInfo"),
-                button -> Util.getPlatform().openUri(MORE_INFO_URL))
-        );
-        this.addButton(new Button(
-                (this.width + BUTTONS_INTERVAL) / 2,
-                this.height - BOTTOM_BUTTON_HEIGHT_OFFSET,
-                BOTTOM_BUTTON_WIDTH, BUTTON_HEIGHT,
-                new TranslationTextComponent("gui.done"),
-                button -> this.onClose())
-        );
+//        this.optionsRowList = new OptionsList(
+//                Objects.requireNonNull(this.minecraft), this.width, this.height,
+//                OPTIONS_LIST_TOP_HEIGHT,
+//                this.height - OPTIONS_LIST_BOTTOM_OFFSET,
+//                OPTIONS_LIST_ITEM_HEIGHT);
+//        this.optionsRowList.addBig(new BooleanOption(
+//                "hbwhelper.configGui.showGenerationTimes.title",
+//                unused -> CMI.showGenerationTimes(),
+//                (unused, newValue) -> CMI.changeShowGenerationTimes(newValue)
+//        ));
+//        this.optionsRowList.addBig(new BooleanOption(
+//                "hbwhelper.configGui.showTeamUpgrades.title",
+//                unused -> CMI.showTeamUpgrades(),
+//                (unused, newValue) -> CMI.changeShowTeamUpgrades(newValue)
+//        ));
+//        this.optionsRowList.addBig(new BooleanOption(
+//                "hbwhelper.configGui.showArmorInfo.title",
+//                unused -> CMI.showArmorInfo(),
+//                (unused, newValue) -> CMI.changeShowArmorInfo(newValue)
+//        ));
+//        this.optionsRowList.addBig(new BooleanOption(
+//                "hbwhelper.configGui.showEffectsInfo.title",
+//                unused -> CMI.showEffectsInfo(),
+//                (unused, newValue) -> CMI.changeShowEffectsInfo(newValue)
+//        ));
+//        this.optionsRowList.addBig(new BooleanOption(
+//                "hbwhelper.configGui.alwaysShowEffects.title",
+//                unused -> CMI.alwaysShowEffects(),
+//                (unused, newValue) -> CMI.changeAlwaysShowEffects(newValue)
+//        ));
+//        this.optionsRowList.addBig(new ProgressOption(
+//                "hbwhelper.configGui.hudX.title",
+//                0.0, this.width, 1.0F,
+//                unused -> (double) CMI.hudX(),
+//                (unused, newValue) -> CMI.changeHudX(newValue.intValue()),
+//                (gs, option) -> new TextComponent(I18n.get(
+//                        "hbwhelper.configGui.hudX.title"
+//                ) + ": " + (int) option.get(gs))));
+//        this.optionsRowList.addBig(new ProgressOption(
+//                "hbwhelper.configGui.hudY.title",
+//                0.0, this.height, 1.0F,
+//                unused -> (double) CMI.hudY(),
+//                (unused, newValue) -> CMI.changeHudY(newValue.intValue()),
+//                (gs, option) -> new TextComponent(I18n.get(
+//                        "hbwhelper.configGui.hudY.title"
+//                ) + ": " + (int) option.get(gs))));
+//        this.optionsRowList.addBig(new CycleOption(
+//                "hbwhelper.configGui.currentDreamMode.title",
+//                (unused, newValue) ->
+//                        CMI.changeCurrentDreamMode(DreamMode.values()[
+//                                (CMI.currentDreamMode().ordinal() + newValue)
+//                                        % DreamMode.values().length]),
+//                (unused, option) -> new TextComponent(I18n.get(
+//                        "hbwhelper.configGui.currentDreamMode.title"
+//                ) + ": " + I18n.get(
+//                        CMI.currentDreamMode().getTranslateKey()
+//                ))
+//        ));
+//        this.children.add(this.optionsRowList);
+//
+//        this.addButton(new Button(
+//                (this.width - BUTTONS_INTERVAL) / 2 - BOTTOM_BUTTON_WIDTH,
+//                this.height - BOTTOM_BUTTON_HEIGHT_OFFSET,
+//                BOTTOM_BUTTON_WIDTH, BUTTON_HEIGHT,
+//                new TranslatableComponent("hbwhelper.configGui.moreInfo"),
+//                button -> Util.getPlatform().openUri(MORE_INFO_URL))
+//        );
+//        this.addButton(new Button(
+//                (this.width + BUTTONS_INTERVAL) / 2,
+//                this.height - BOTTOM_BUTTON_HEIGHT_OFFSET,
+//                BOTTOM_BUTTON_WIDTH, BUTTON_HEIGHT,
+//                new TranslatableComponent("gui.done"),
+//                button -> this.onClose())
+//        );
     }
 
     /**
@@ -206,7 +195,7 @@ public final class ConfigScreen extends Screen {
      * @param partialTicks number of partial ticks
      */
     @Override
-    public void render(@Nonnull MatrixStack matrixStack,
+    public void render(@Nonnull PoseStack matrixStack,
                        int mouseX, int mouseY, float partialTicks) {
         this.renderBackground(matrixStack);
         this.optionsRowList.render(matrixStack, mouseX, mouseY, partialTicks);

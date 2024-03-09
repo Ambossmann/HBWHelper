@@ -27,11 +27,11 @@ package io.github.leo3418.hbwhelper.game;
 
 import io.github.leo3418.hbwhelper.util.TextComponents;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.item.ArmorStandEntity;
-import net.minecraft.util.math.AxisAlignedBB;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.decoration.ArmorStand;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
 import net.minecraftforge.client.event.ClientChatReceivedEvent;
 
 import java.util.*;
@@ -409,7 +409,7 @@ public class GameManager {
                 Objects.requireNonNull(Minecraft.getInstance().level)
                         .entitiesForRendering();
         for (Entity entity : entities) {
-            if (entity instanceof ArmorStandEntity) {
+            if (entity instanceof ArmorStand) {
                 String name = TextComponents.toFormattedText(
                         entity.getDisplayName());
                 if (name.contains(generatorText)) {
@@ -429,12 +429,12 @@ public class GameManager {
      *         a generator cannot be found or read at that position
      */
     private int getSpawnTime(BlockPos generatorPos) {
-        Iterable<ArmorStandEntity> genEntities =
+        Iterable<ArmorStand> genEntities =
                 Objects.requireNonNull(Minecraft.getInstance().level)
-                        .getEntitiesOfClass(ArmorStandEntity.class,
-                                new AxisAlignedBB(generatorPos));
-        for (ArmorStandEntity genEntity : genEntities) {
-            ITextComponent floatTextComponent = genEntity.getDisplayName();
+                        .getEntitiesOfClass(ArmorStand.class,
+                                new AABB(generatorPos));
+        for (ArmorStand genEntity : genEntities) {
+            Component floatTextComponent = genEntity.getDisplayName();
             String formattedText =
                     TextComponents.toFormattedText(floatTextComponent);
             if (formattedText.contains(GENERATOR_TEXT)) {

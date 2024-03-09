@@ -34,10 +34,10 @@ import io.github.leo3418.hbwhelper.util.GameDetector;
 import io.github.leo3418.hbwhelper.util.HypixelDetector;
 import io.github.leo3418.hbwhelper.util.InProgressGameDetector;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.util.Util;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.Util;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TranslatableComponent;
 import net.minecraftforge.client.event.*;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.TickEvent;
@@ -71,8 +71,8 @@ public class EventManager {
      * {@link ITextComponent} object storing prompt being shown when client
      * rejoins a Bed Wars game it was in before after Minecraft restarts
      */
-    private static final ITextComponent CLIENT_RESTART_PROMPT =
-            new TranslationTextComponent("hbwhelper.messages.clientRestart",
+    private static final Component CLIENT_RESTART_PROMPT =
+            new TranslatableComponent("hbwhelper.messages.clientRestart",
                     HbwHelper.NAME);
 
     /**
@@ -80,8 +80,8 @@ public class EventManager {
      * rejoins a Bed Wars game it was in before, but Minecraft has not been
      * restarted
      */
-    private static final ITextComponent CLIENT_REJOIN_PROMPT =
-            new TranslationTextComponent("hbwhelper.messages.clientRejoin",
+    private static final Component CLIENT_REJOIN_PROMPT =
+            new TranslatableComponent("hbwhelper.messages.clientRejoin",
                     HbwHelper.NAME);
 
     /**
@@ -168,7 +168,7 @@ public class EventManager {
 
     @SubscribeEvent
     @SuppressWarnings("unused")
-    public void onGuiOpen(GuiOpenEvent event) {
+    public void onGuiOpen(ScreenEvent.InitScreenEvent.Post event) {
         gameDetector.update(event);
     }
 
@@ -184,7 +184,7 @@ public class EventManager {
 
     @SubscribeEvent
     @SuppressWarnings("unused")
-    public void onRenderGameOverlay(RenderGameOverlayEvent.Post event) {
+    public void onRenderGameOverlay(RenderGameOverlayEvent.PostLayer event) {
         hudGui.render(event);
     }
 
@@ -218,7 +218,7 @@ public class EventManager {
             GameManager.clearInstance();
             shouldClearGMInstance = false;
         }
-        PlayerEntity player =
+        Player player =
                 Objects.requireNonNull(Minecraft.getInstance().player);
         if (GameManager.getInstance() == null) {
             // Client is rejoining a Bed Wars game after restart of Minecraft

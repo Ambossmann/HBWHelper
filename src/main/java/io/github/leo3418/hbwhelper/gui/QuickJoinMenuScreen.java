@@ -25,18 +25,18 @@
 
 package io.github.leo3418.hbwhelper.gui;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import io.github.leo3418.hbwhelper.ConfigManager;
 import io.github.leo3418.hbwhelper.HbwHelper;
 import io.github.leo3418.hbwhelper.KeyBindings;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.button.Button;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.util.Util;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.StringTextComponent;
-import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.resources.language.I18n;
+import net.minecraft.Util;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
+import net.minecraft.network.chat.TranslatableComponent;
 
 import javax.annotation.Nonnull;
 import java.util.ArrayList;
@@ -44,6 +44,8 @@ import java.util.List;
 import java.util.Objects;
 
 import static io.github.leo3418.hbwhelper.gui.ButtonParameters.*;
+
+import net.minecraft.client.gui.components.Button.OnPress;
 
 /**
  * The GUI of this mod for the Bed Wars quick join feature.
@@ -71,7 +73,7 @@ public final class QuickJoinMenuScreen extends Screen {
      * Constructs a new {@link QuickJoinMenuScreen} instance.
      */
     public QuickJoinMenuScreen() {
-        super(new TranslationTextComponent("hbwhelper.quickJoinGui.title"));
+        super(new TranslatableComponent("hbwhelper.quickJoinGui.title"));
     }
 
     /**
@@ -89,106 +91,107 @@ public final class QuickJoinMenuScreen extends Screen {
      * @return the {@code List} of buttons related to Dream mode games
      */
     private List<QuickJoinMenuButton> getDreamButtons(int x, int y) {
-        List<QuickJoinMenuButton> buttons = new ArrayList<>(2);
-        switch (ConfigManager.getInstance().currentDreamMode()) {
-            case RUSH:
-                buttons.add(new QuickJoinMenuButton(
-                        QuickJoinMenuButton.Variant.SHORT,
-                        x, y,
-                        I18n.get("hbwhelper.dream.rush") + " " +
-                                I18n.get("hbwhelper.quickJoinGui.doubles"),
-                        this,
-                        CommandAction.PLAY_RUSH_DOUBLES));
-                buttons.add(new QuickJoinMenuButton(
-                        QuickJoinMenuButton.Variant.SHORT,
-                        x + SHORT_BUTTON_WIDTH + BUTTONS_INTERVAL, y,
-                        I18n.get("hbwhelper.dream.rush") + " " +
-                                I18n.get("hbwhelper.quickJoinGui.4v4v4v4"),
-                        this,
-                        CommandAction.PLAY_RUSH_4V4V4V4));
-                return buttons;
-            case ULTIMATE:
-                buttons.add(new QuickJoinMenuButton(
-                        QuickJoinMenuButton.Variant.SHORT,
-                        x, y,
-                        I18n.get("hbwhelper.dream.ultimate") + " " +
-                                I18n.get("hbwhelper.quickJoinGui.doubles"),
-                        this,
-                        CommandAction.PLAY_ULTIMATE_DOUBLES));
-                buttons.add(new QuickJoinMenuButton(
-                        QuickJoinMenuButton.Variant.SHORT,
-                        x + SHORT_BUTTON_WIDTH + BUTTONS_INTERVAL, y,
-                        I18n.get("hbwhelper.dream.ultimate") + " " +
-                                I18n.get("hbwhelper.quickJoinGui.4v4v4v4"),
-                        this,
-                        CommandAction.PLAY_ULTIMATE_4V4V4V4));
-                return buttons;
-            case CASTLE:
-                buttons.add(new QuickJoinMenuButton(
-                        QuickJoinMenuButton.Variant.LONG, x, y,
-                        I18n.get("hbwhelper.dream.castle"),
-                        this,
-                        CommandAction.PLAY_CASTLE));
-                return buttons;
-            case LUCKY_BLOCKS:
-                buttons.add(new QuickJoinMenuButton(
-                        QuickJoinMenuButton.Variant.SHORT,
-                        x, y,
-                        // Translation key `hbwhelper.quickJoinGui.luckyBlocks`
-                        // is used instead of `hbwhelper.dream.luckyBlocks` to
-                        // avoid long text not fitting into a short button
-                        I18n.get("hbwhelper.quickJoinGui.luckyBlocks") + " " +
-                                I18n.get("hbwhelper.quickJoinGui.doubles"),
-                        this,
-                        CommandAction.PLAY_LUCKY_BLOCKS_DOUBLES));
-                buttons.add(new QuickJoinMenuButton(
-                        QuickJoinMenuButton.Variant.SHORT,
-                        x + SHORT_BUTTON_WIDTH + BUTTONS_INTERVAL, y,
-                        I18n.get("hbwhelper.quickJoinGui.luckyBlocks") + " " +
-                                I18n.get("hbwhelper.quickJoinGui.4v4v4v4"),
-                        this,
-                        CommandAction.PLAY_LUCKY_BLOCKS_4V4V4V4));
-                return buttons;
-            case VOIDLESS:
-                buttons.add(new QuickJoinMenuButton(
-                        QuickJoinMenuButton.Variant.SHORT,
-                        x, y,
-                        I18n.get("hbwhelper.dream.voidless") + " " +
-                                I18n.get("hbwhelper.quickJoinGui.doubles"),
-                        this,
-                        CommandAction.PLAY_VOIDLESS_DOUBLES));
-                buttons.add(new QuickJoinMenuButton(
-                        QuickJoinMenuButton.Variant.SHORT,
-                        x + SHORT_BUTTON_WIDTH + BUTTONS_INTERVAL, y,
-                        I18n.get("hbwhelper.dream.voidless") + " " +
-                                I18n.get("hbwhelper.quickJoinGui.4v4v4v4"),
-                        this,
-                        CommandAction.PLAY_VOIDLESS_4V4V4V4));
-                return buttons;
-            case ARMED:
-                buttons.add(new QuickJoinMenuButton(
-                        QuickJoinMenuButton.Variant.SHORT,
-                        x, y,
-                        I18n.get("hbwhelper.dream.armed") + " " +
-                                I18n.get("hbwhelper.quickJoinGui.doubles"),
-                        this,
-                        CommandAction.PLAY_ARMED_DOUBLES));
-                buttons.add(new QuickJoinMenuButton(
-                        QuickJoinMenuButton.Variant.SHORT,
-                        x + SHORT_BUTTON_WIDTH + BUTTONS_INTERVAL, y,
-                        I18n.get("hbwhelper.dream.armed") + " " +
-                                I18n.get("hbwhelper.quickJoinGui.4v4v4v4"),
-                        this,
-                        CommandAction.PLAY_ARMED_4V4V4V4));
-                return buttons;
-            default:
-                buttons.add(new QuickJoinMenuButton(
-                        QuickJoinMenuButton.Variant.LONG, x, y,
-                        I18n.get("hbwhelper.quickJoinGui.dream"),
-                        this,
-                        PromptAction.SET_DREAM_MODE));
-                return buttons;
-        }
+//        List<QuickJoinMenuButton> buttons = new ArrayList<>(2);
+//        switch (ConfigManager.getInstance().currentDreamMode()) {
+//            case RUSH:
+//                buttons.add(new QuickJoinMenuButton(
+//                        QuickJoinMenuButton.Variant.SHORT,
+//                        x, y,
+//                        I18n.get("hbwhelper.dream.rush") + " " +
+//                                I18n.get("hbwhelper.quickJoinGui.doubles"),
+//                        this,
+//                        CommandAction.PLAY_RUSH_DOUBLES));
+//                buttons.add(new QuickJoinMenuButton(
+//                        QuickJoinMenuButton.Variant.SHORT,
+//                        x + SHORT_BUTTON_WIDTH + BUTTONS_INTERVAL, y,
+//                        I18n.get("hbwhelper.dream.rush") + " " +
+//                                I18n.get("hbwhelper.quickJoinGui.4v4v4v4"),
+//                        this,
+//                        CommandAction.PLAY_RUSH_4V4V4V4));
+//                return buttons;
+//            case ULTIMATE:
+//                buttons.add(new QuickJoinMenuButton(
+//                        QuickJoinMenuButton.Variant.SHORT,
+//                        x, y,
+//                        I18n.get("hbwhelper.dream.ultimate") + " " +
+//                                I18n.get("hbwhelper.quickJoinGui.doubles"),
+//                        this,
+//                        CommandAction.PLAY_ULTIMATE_DOUBLES));
+//                buttons.add(new QuickJoinMenuButton(
+//                        QuickJoinMenuButton.Variant.SHORT,
+//                        x + SHORT_BUTTON_WIDTH + BUTTONS_INTERVAL, y,
+//                        I18n.get("hbwhelper.dream.ultimate") + " " +
+//                                I18n.get("hbwhelper.quickJoinGui.4v4v4v4"),
+//                        this,
+//                        CommandAction.PLAY_ULTIMATE_4V4V4V4));
+//                return buttons;
+//            case CASTLE:
+//                buttons.add(new QuickJoinMenuButton(
+//                        QuickJoinMenuButton.Variant.LONG, x, y,
+//                        I18n.get("hbwhelper.dream.castle"),
+//                        this,
+//                        CommandAction.PLAY_CASTLE));
+//                return buttons;
+//            case LUCKY_BLOCKS:
+//                buttons.add(new QuickJoinMenuButton(
+//                        QuickJoinMenuButton.Variant.SHORT,
+//                        x, y,
+//                        // Translation key `hbwhelper.quickJoinGui.luckyBlocks`
+//                        // is used instead of `hbwhelper.dream.luckyBlocks` to
+//                        // avoid long text not fitting into a short button
+//                        I18n.get("hbwhelper.quickJoinGui.luckyBlocks") + " " +
+//                                I18n.get("hbwhelper.quickJoinGui.doubles"),
+//                        this,
+//                        CommandAction.PLAY_LUCKY_BLOCKS_DOUBLES));
+//                buttons.add(new QuickJoinMenuButton(
+//                        QuickJoinMenuButton.Variant.SHORT,
+//                        x + SHORT_BUTTON_WIDTH + BUTTONS_INTERVAL, y,
+//                        I18n.get("hbwhelper.quickJoinGui.luckyBlocks") + " " +
+//                                I18n.get("hbwhelper.quickJoinGui.4v4v4v4"),
+//                        this,
+//                        CommandAction.PLAY_LUCKY_BLOCKS_4V4V4V4));
+//                return buttons;
+//            case VOIDLESS:
+//                buttons.add(new QuickJoinMenuButton(
+//                        QuickJoinMenuButton.Variant.SHORT,
+//                        x, y,
+//                        I18n.get("hbwhelper.dream.voidless") + " " +
+//                                I18n.get("hbwhelper.quickJoinGui.doubles"),
+//                        this,
+//                        CommandAction.PLAY_VOIDLESS_DOUBLES));
+//                buttons.add(new QuickJoinMenuButton(
+//                        QuickJoinMenuButton.Variant.SHORT,
+//                        x + SHORT_BUTTON_WIDTH + BUTTONS_INTERVAL, y,
+//                        I18n.get("hbwhelper.dream.voidless") + " " +
+//                                I18n.get("hbwhelper.quickJoinGui.4v4v4v4"),
+//                        this,
+//                        CommandAction.PLAY_VOIDLESS_4V4V4V4));
+//                return buttons;
+//            case ARMED:
+//                buttons.add(new QuickJoinMenuButton(
+//                        QuickJoinMenuButton.Variant.SHORT,
+//                        x, y,
+//                        I18n.get("hbwhelper.dream.armed") + " " +
+//                                I18n.get("hbwhelper.quickJoinGui.doubles"),
+//                        this,
+//                        CommandAction.PLAY_ARMED_DOUBLES));
+//                buttons.add(new QuickJoinMenuButton(
+//                        QuickJoinMenuButton.Variant.SHORT,
+//                        x + SHORT_BUTTON_WIDTH + BUTTONS_INTERVAL, y,
+//                        I18n.get("hbwhelper.dream.armed") + " " +
+//                                I18n.get("hbwhelper.quickJoinGui.4v4v4v4"),
+//                        this,
+//                        CommandAction.PLAY_ARMED_4V4V4V4));
+//                return buttons;
+//            default:
+//                buttons.add(new QuickJoinMenuButton(
+//                        QuickJoinMenuButton.Variant.LONG, x, y,
+//                        I18n.get("hbwhelper.quickJoinGui.dream"),
+//                        this,
+//                        PromptAction.SET_DREAM_MODE));
+//                return buttons;
+//        }
+        return null;
     }
 
     /**
@@ -197,50 +200,50 @@ public final class QuickJoinMenuScreen extends Screen {
     @Override
     @SuppressWarnings("ConstantConditions")
     protected void init() {
-        int buttonX = (this.width - LONG_BUTTON_WIDTH) / 2;
-        int firstButtonY = this.height / 4 + BUTTONS_INTERVAL;
-        // Number of lines of buttons added so far, used for calculating height
-        // of the next button
-        int line = 0;
-        addButton(new QuickJoinMenuButton(
-                QuickJoinMenuButton.Variant.LONG,
-                buttonX, firstButtonY + (line++ * BUTTONS_TRANSLATION_INTERVAL),
-                I18n.get("hbwhelper.quickJoinGui.solo"), this,
-                CommandAction.PLAY_SOLO
-        ));
-        addButton(new QuickJoinMenuButton(
-                QuickJoinMenuButton.Variant.LONG,
-                buttonX, firstButtonY + (line++ * BUTTONS_TRANSLATION_INTERVAL),
-                I18n.get("hbwhelper.quickJoinGui.doubles"), this,
-                CommandAction.PLAY_DOUBLES
-        ));
-        addButton(new QuickJoinMenuButton(
-                QuickJoinMenuButton.Variant.LONG,
-                buttonX, firstButtonY + (line++ * BUTTONS_TRANSLATION_INTERVAL),
-                I18n.get("hbwhelper.quickJoinGui.3v3v3v3"), this,
-                CommandAction.PLAY_3V3V3V3
-        ));
-        addButton(new QuickJoinMenuButton(
-                QuickJoinMenuButton.Variant.LONG,
-                buttonX, firstButtonY + (line++ * BUTTONS_TRANSLATION_INTERVAL),
-                I18n.get("hbwhelper.quickJoinGui.4v4v4v4"), this,
-                CommandAction.PLAY_4V4V4V4
-        ));
-        addButton(new QuickJoinMenuButton(
-                QuickJoinMenuButton.Variant.LONG,
-                buttonX, firstButtonY + (line++ * BUTTONS_TRANSLATION_INTERVAL),
-                I18n.get("hbwhelper.quickJoinGui.4v4"), this,
-                CommandAction.PLAY_4V4
-        ));
-        getDreamButtons(buttonX,
-                firstButtonY + (line++ * BUTTONS_TRANSLATION_INTERVAL))
-                .forEach(this::addButton);
-        // The following should always be the last button
-        addButton(new QuickJoinMenuButton(
-                QuickJoinMenuButton.Variant.LONG,
-                buttonX, firstButtonY + (line * BUTTONS_TRANSLATION_INTERVAL),
-                I18n.get("hbwhelper.quickJoinGui.backToGame"), this
-        ));
+//        int buttonX = (this.width - LONG_BUTTON_WIDTH) / 2;
+//        int firstButtonY = this.height / 4 + BUTTONS_INTERVAL;
+//        // Number of lines of buttons added so far, used for calculating height
+//        // of the next button
+//        int line = 0;
+//        addButton(new QuickJoinMenuButton(
+//                QuickJoinMenuButton.Variant.LONG,
+//                buttonX, firstButtonY + (line++ * BUTTONS_TRANSLATION_INTERVAL),
+//                I18n.get("hbwhelper.quickJoinGui.solo"), this,
+//                CommandAction.PLAY_SOLO
+//        ));
+//        addButton(new QuickJoinMenuButton(
+//                QuickJoinMenuButton.Variant.LONG,
+//                buttonX, firstButtonY + (line++ * BUTTONS_TRANSLATION_INTERVAL),
+//                I18n.get("hbwhelper.quickJoinGui.doubles"), this,
+//                CommandAction.PLAY_DOUBLES
+//        ));
+//        addButton(new QuickJoinMenuButton(
+//                QuickJoinMenuButton.Variant.LONG,
+//                buttonX, firstButtonY + (line++ * BUTTONS_TRANSLATION_INTERVAL),
+//                I18n.get("hbwhelper.quickJoinGui.3v3v3v3"), this,
+//                CommandAction.PLAY_3V3V3V3
+//        ));
+//        addButton(new QuickJoinMenuButton(
+//                QuickJoinMenuButton.Variant.LONG,
+//                buttonX, firstButtonY + (line++ * BUTTONS_TRANSLATION_INTERVAL),
+//                I18n.get("hbwhelper.quickJoinGui.4v4v4v4"), this,
+//                CommandAction.PLAY_4V4V4V4
+//        ));
+//        addButton(new QuickJoinMenuButton(
+//                QuickJoinMenuButton.Variant.LONG,
+//                buttonX, firstButtonY + (line++ * BUTTONS_TRANSLATION_INTERVAL),
+//                I18n.get("hbwhelper.quickJoinGui.4v4"), this,
+//                CommandAction.PLAY_4V4
+//        ));
+//        getDreamButtons(buttonX,
+//                firstButtonY + (line++ * BUTTONS_TRANSLATION_INTERVAL))
+//                .forEach(this::addButton);
+//        // The following should always be the last button
+//        addButton(new QuickJoinMenuButton(
+//                QuickJoinMenuButton.Variant.LONG,
+//                buttonX, firstButtonY + (line * BUTTONS_TRANSLATION_INTERVAL),
+//                I18n.get("hbwhelper.quickJoinGui.backToGame"), this
+//        ));
     }
 
     /**
@@ -252,7 +255,7 @@ public final class QuickJoinMenuScreen extends Screen {
      * @param partialTicks number of partial ticks
      */
     @Override
-    public void render(@Nonnull MatrixStack matrixStack,
+    public void render(@Nonnull PoseStack matrixStack,
                        int mouseX, int mouseY, float partialTicks) {
         this.renderBackground(matrixStack);
         drawCenteredString(matrixStack, this.font, this.title.getString(),
@@ -287,7 +290,7 @@ public final class QuickJoinMenuScreen extends Screen {
      * Enumeration of {@link Button.IPressable} implementations that runs a
      * Minecraft command when a {@link QuickJoinMenuButton} is pressed.
      */
-    private enum CommandAction implements Button.IPressable {
+    private enum CommandAction implements Button.OnPress {
         PLAY_SOLO("/play bedwars_eight_one"),
         PLAY_DOUBLES("/play bedwars_eight_two"),
         PLAY_3V3V3V3("/play bedwars_four_three"),
@@ -339,18 +342,18 @@ public final class QuickJoinMenuScreen extends Screen {
      * shows a prompt in chat messages when a {@link QuickJoinMenuButton} is
      * pressed.
      */
-    private enum PromptAction implements Button.IPressable {
+    private enum PromptAction implements Button.OnPress {
         /**
          * The prompt that reminds the user to select the current game variant
          * for the Bed Wars Dream mode
          */
-        SET_DREAM_MODE(new TranslationTextComponent(
+        SET_DREAM_MODE(new TranslatableComponent(
                 "hbwhelper.messages.setDreamMode", HbwHelper.NAME));
 
         /**
          * The prompt being shown when this {@code PromptAction} is performed
          */
-        private final ITextComponent prompt;
+        private final Component prompt;
 
         /**
          * Constructs a new constant of {@link Button.IPressable}
@@ -359,7 +362,7 @@ public final class QuickJoinMenuScreen extends Screen {
          * @param prompt the prompt being shown when this {@code PromptAction}
          *         is performed
          */
-        PromptAction(ITextComponent prompt) {
+        PromptAction(Component prompt) {
             this.prompt = prompt;
         }
 
@@ -384,7 +387,7 @@ public final class QuickJoinMenuScreen extends Screen {
          * Cache of a {@link Button.IPressable} object which defines no action
          * for a button
          */
-        private static final IPressable NO_ACTION = button -> {
+        private static final OnPress NO_ACTION = button -> {
         };
 
         /**
@@ -423,9 +426,9 @@ public final class QuickJoinMenuScreen extends Screen {
         private QuickJoinMenuButton(Variant variant, int x, int y,
                                     String buttonText,
                                     QuickJoinMenuScreen parent,
-                                    IPressable action) {
+                                    OnPress action) {
             super(x, y, variant.width, BUTTON_HEIGHT,
-                    new StringTextComponent(buttonText), action);
+                    new TextComponent(buttonText), action);
             this.parent = parent;
         }
 
