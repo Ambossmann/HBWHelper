@@ -99,9 +99,6 @@ public class EffectsReader {
      *         maximum duration
      */
     public static int getDuration(MobEffectInstance potionEffect) {
-        if (potionEffect.isNoCounter()) {
-            return -1;
-        }
         return potionEffect.getDuration() / TICKS_PER_SECOND;
     }
 

@@ -359,7 +359,7 @@ public class HudGui extends GuiComponent {
      */
     private void drawEffectIconAndString(TextureAtlasSprite icon, String text) {
         mc.getTextureManager()
-                .bindForSetup(icon.atlas().location());
+                .bindForSetup(icon.atlasLocation());
         // Removes black background of the first icon rendered
         RenderSystem.enableBlend();
         blit(matrixStack, configManager.hudX(), currentHeight,
