@@ -36,12 +36,12 @@ import io.github.leo3418.hbwhelper.util.InProgressGameDetector;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
-import net.minecraftforge.client.event.*;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.TickEvent;
-import net.minecraftforge.eventbus.api.BusBuilder;
-import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.neoforged.bus.api.BusBuilder;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.client.event.*;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.TickEvent;
 
 import java.util.Objects;
 
@@ -66,7 +66,7 @@ public class EventManager {
     public static final IEventBus EVENT_BUS = BusBuilder.builder().build();
 
     /**
-     * {@link ITextComponent} object storing prompt being shown when client
+     * {@link Component} object storing prompt being shown when client
      * rejoins a Bed Wars game it was in before after Minecraft restarts
      */
     private static final Component CLIENT_RESTART_PROMPT =
@@ -74,7 +74,7 @@ public class EventManager {
                     HbwHelper.NAME);
 
     /**
-     * {@link ITextComponent} object storing prompt being shown when client
+     * {@link Component} object storing prompt being shown when client
      * rejoins a Bed Wars game it was in before, but Minecraft has not been
      * restarted
      */
@@ -153,7 +153,7 @@ public class EventManager {
      * mod's {@link #EVENT_BUS proprietary event bus}.
      */
     void registerOnEventBus() {
-        MinecraftForge.EVENT_BUS.register(this);
+        NeoForge.EVENT_BUS.register(this);
         EventManager.EVENT_BUS.register(this);
     }
 

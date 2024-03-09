@@ -28,7 +28,7 @@ package io.github.leo3418.hbwhelper.util;
 import io.github.leo3418.hbwhelper.EventManager;
 import io.github.leo3418.hbwhelper.event.ClientJoinInProgressGameEvent;
 import io.github.leo3418.hbwhelper.event.TeleportCancelledEvent;
-import net.minecraftforge.client.event.ClientChatReceivedEvent;
+import net.neoforged.neoforge.client.event.ClientChatReceivedEvent;
 
 /**
  * Detects if client is joining an in-progress Hypixel Bed Wars game and if

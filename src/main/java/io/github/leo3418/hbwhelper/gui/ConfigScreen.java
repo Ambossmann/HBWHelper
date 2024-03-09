@@ -28,6 +28,7 @@ package io.github.leo3418.hbwhelper.gui;
 import com.mojang.blaze3d.vertex.PoseStack;
 import io.github.leo3418.hbwhelper.ConfigManager;
 import io.github.leo3418.hbwhelper.HbwHelper;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.OptionsList;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
@@ -189,19 +190,18 @@ public final class ConfigScreen extends Screen {
     /**
      * Draws this GUI on the screen.
      *
-     * @param matrixStack the matrix stack
+     * @param guiGraphics the gui graphics
      * @param mouseX horizontal location of the mouse
      * @param mouseY vertical location of the mouse
      * @param partialTicks number of partial ticks
      */
     @Override
-    public void render(@Nonnull PoseStack matrixStack,
-                       int mouseX, int mouseY, float partialTicks) {
-        this.renderBackground(matrixStack);
-        this.optionsRowList.render(matrixStack, mouseX, mouseY, partialTicks);
-        drawCenteredString(matrixStack, this.font, this.title.getString(),
+    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTicks) {
+        this.renderTransparentBackground(guiGraphics);
+        this.optionsRowList.render(guiGraphics, mouseX, mouseY, partialTicks);
+        guiGraphics.drawCenteredString(this.font, this.title.getString(),
                 this.width / 2, TITLE_HEIGHT, 0xFFFFFF);
-        super.render(matrixStack, mouseX, mouseY, partialTicks);
+        super.render(guiGraphics, mouseX, mouseY, partialTicks);
     }
 
     /**

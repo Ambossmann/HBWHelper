@@ -30,10 +30,10 @@ import com.electronwill.nightconfig.core.io.WritingMode;
 import io.github.leo3418.hbwhelper.game.DreamMode;
 import io.github.leo3418.hbwhelper.gui.HudGui;
 import net.minecraft.client.Minecraft;
-import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.common.ForgeConfigSpec.BooleanValue;
-import net.minecraftforge.common.ForgeConfigSpec.EnumValue;
-import net.minecraftforge.common.ForgeConfigSpec.IntValue;
+import net.neoforged.neoforge.common.ModConfigSpec;
+import net.neoforged.neoforge.common.ModConfigSpec.BooleanValue;
+import net.neoforged.neoforge.common.ModConfigSpec.EnumValue;
+import net.neoforged.neoforge.common.ModConfigSpec.IntValue;
 import org.apache.commons.lang3.tuple.Pair;
 
 import java.nio.file.Path;
@@ -75,9 +75,9 @@ public class ConfigManager {
     private static final ConfigManager INSTANCE;
 
     /**
-     * The {@link ForgeConfigSpec} instance for this mod's configuration
+     * The {@link ModConfigSpec} instance for this mod's configuration
      */
-    private static final ForgeConfigSpec SPEC;
+    private static final ModConfigSpec SPEC;
 
     /**
      * {@link Path} to the configuration file of this mod
@@ -86,8 +86,8 @@ public class ConfigManager {
             Paths.get("config", MOD_ID + ".toml");
 
     static {
-        Pair<ConfigManager, ForgeConfigSpec> specPair =
-                new ForgeConfigSpec.Builder().configure(ConfigManager::new);
+        Pair<ConfigManager, ModConfigSpec> specPair =
+                new ModConfigSpec.Builder().configure(ConfigManager::new);
         INSTANCE = specPair.getLeft();
         SPEC = specPair.getRight();
         CommentedFileConfig config = CommentedFileConfig.builder(CONFIG_PATH)
@@ -147,7 +147,7 @@ public class ConfigManager {
      * Implementation of Singleton design pattern, which allows only one
      * instance of this class to be created.
      */
-    private ConfigManager(ForgeConfigSpec.Builder configSpecBuilder) {
+    private ConfigManager(ModConfigSpec.Builder configSpecBuilder) {
         // Comments are not added because there was no way to translate
         // descriptions from translate keys here
 

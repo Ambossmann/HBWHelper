@@ -26,7 +26,7 @@
 package io.github.leo3418.hbwhelper.event;
 
 import io.github.leo3418.hbwhelper.game.GameType;
-import net.minecraftforge.eventbus.api.Event;
+import net.neoforged.bus.api.Event;
 
 /**
  * The event fired when the {@link GameType} of the current Bed Wars game is

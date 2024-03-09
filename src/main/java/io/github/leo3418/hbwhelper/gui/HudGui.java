@@ -25,8 +25,8 @@
 
 package io.github.leo3418.hbwhelper.gui;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
 import io.github.leo3418.hbwhelper.ConfigManager;
 import io.github.leo3418.hbwhelper.game.CountedTrap;
 import io.github.leo3418.hbwhelper.game.GameManager;
@@ -34,18 +34,16 @@ import io.github.leo3418.hbwhelper.util.ArmorReader;
 import io.github.leo3418.hbwhelper.util.EffectsReader;
 import io.github.leo3418.hbwhelper.util.GameDetector;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiComponent;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.ChatScreen;
-import com.mojang.blaze3d.platform.Lighting;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraftforge.client.event.RenderGuiOverlayEvent;
-import net.minecraftforge.client.gui.overlay.ForgeGui;
-import net.minecraftforge.client.gui.overlay.GuiOverlayManager;
-import net.minecraftforge.client.gui.overlay.NamedGuiOverlay;
+import net.minecraft.world.item.ItemStack;
+import net.neoforged.neoforge.client.event.RenderGuiOverlayEvent;
+import net.neoforged.neoforge.client.gui.overlay.GuiOverlayManager;
+import net.neoforged.neoforge.client.gui.overlay.NamedGuiOverlay;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -62,7 +60,7 @@ import static net.minecraft.world.item.Items.*;
  * @see <a href="https://minecraft.gamepedia.com/Heads-up_display"
  *         target="_top">Minecraft Wiki's introduction on Minecraft's HUD</a>
  */
-public class HudGui extends GuiComponent {
+public class HudGui extends GuiGraphics {
     /**
      * Color of text displayed on this GUI
      */
@@ -146,6 +144,7 @@ public class HudGui extends GuiComponent {
      * instance of this class to be created.
      */
     private HudGui() {
+        super(Minecraft.getInstance(), Minecraft.getInstance().renderBuffers().bufferSource());
         mc = Minecraft.getInstance();
         gameDetector = GameDetector.getInstance();
         configManager = ConfigManager.getInstance();
@@ -166,7 +165,7 @@ public class HudGui extends GuiComponent {
     /**
      * When vanilla Minecraft's HUD is rendered, renders this GUI on the HUD.
      * <p>
-     * This method should be called whenever {@link RenderGameOverlayEvent.Post}
+     * This method should be called whenever {@link RenderGuiOverlayEvent.Post}
      * is fired.
      *
      * @param event the event called when an element on the HUD is rendered
@@ -200,7 +199,7 @@ public class HudGui extends GuiComponent {
      */
     private boolean shouldRender() {
         return !(mc.screen instanceof ChatScreen)
-                && !mc.options.renderDebug;
+                && !mc.getDebugOverlay().showDebugScreen();
     }
 
     /**
@@ -362,10 +361,10 @@ public class HudGui extends GuiComponent {
                 .bindForSetup(icon.atlasLocation());
         // Removes black background of the first icon rendered
         RenderSystem.enableBlend();
-        blit(matrixStack, configManager.hudX(), currentHeight,
+        blit(configManager.hudX(), currentHeight,
                 0,
                 EFFECT_ICON_SIZE, EFFECT_ICON_SIZE, icon);
-        drawString(matrixStack, mc.font, " " + text,
+        drawString(mc.font, " " + text,
                 EFFECT_ICON_SIZE + configManager.hudX(),
                 currentHeight + (EFFECT_ICON_SIZE - LINE_HEIGHT) / 2 + 1,
                 TEXT_COLOR);
@@ -387,11 +386,11 @@ public class HudGui extends GuiComponent {
      */
     private void drawItemIconAndString(ItemStack itemStack, String text) {
 //        Lighting.turnBackOn();
-        mc.getItemRenderer().renderAndDecorateItem(matrixStack, itemStack,
+        renderFakeItem(itemStack,
                 configManager.hudX() + (EFFECT_ICON_SIZE - ITEM_ICON_SIZE) / 2,
                 currentHeight);
 //        Lighting.turnOff();
-        drawString(matrixStack, mc.font, " " + text,
+        drawString(mc.font, " " + text,
                 ITEM_ICON_SIZE + configManager.hudX(),
                 currentHeight + (ITEM_ICON_SIZE - LINE_HEIGHT) / 2 + 1,
                 TEXT_COLOR);
@@ -414,7 +413,7 @@ public class HudGui extends GuiComponent {
                 + (EFFECT_ICON_SIZE - ITEM_ICON_SIZE) / 2;
 //        Lighting.turnBackOn();
         for (ItemStack itemStack : itemStacks) {
-            mc.getItemRenderer().renderAndDecorateItem(matrixStack, itemStack,
+            renderFakeItem(itemStack,
                     currentWidth, currentHeight);
             currentWidth += ITEM_ICON_SIZE + 1;
         }

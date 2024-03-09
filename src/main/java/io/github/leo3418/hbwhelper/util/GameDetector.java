@@ -31,9 +31,9 @@ import io.github.leo3418.hbwhelper.event.ClientLeaveGameEvent;
 import io.github.leo3418.hbwhelper.event.ClientRejoinGameEvent;
 import io.github.leo3418.hbwhelper.event.GameStartEvent;
 import net.minecraft.client.gui.screens.ReceivingLevelScreen;
-import net.minecraftforge.client.event.ClientChatReceivedEvent;
-import net.minecraftforge.client.event.ClientPlayerNetworkEvent;
-import net.minecraftforge.client.event.ScreenEvent;
+import net.neoforged.neoforge.client.event.ClientChatReceivedEvent;
+import net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent;
+import net.neoforged.neoforge.client.event.ScreenEvent;
 
 /**
  * Detects and tracks if client is in a Hypixel Bed Wars game.

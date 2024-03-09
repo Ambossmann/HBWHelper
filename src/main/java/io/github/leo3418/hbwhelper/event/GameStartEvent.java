@@ -25,7 +25,7 @@
 
 package io.github.leo3418.hbwhelper.event;
 
-import net.minecraftforge.eventbus.api.Event;
+import net.neoforged.bus.api.Event;
 
 /**
  * The event fired when client finishes waiting for a Bed Wars game to start

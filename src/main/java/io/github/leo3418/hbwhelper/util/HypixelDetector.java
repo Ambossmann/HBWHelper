@@ -27,7 +27,7 @@ package io.github.leo3418.hbwhelper.util;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ServerData;
-import net.minecraftforge.client.event.ClientPlayerNetworkEvent;
+import net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent;
 
 /**
  * Detects and tracks if client is connected to Hypixel.

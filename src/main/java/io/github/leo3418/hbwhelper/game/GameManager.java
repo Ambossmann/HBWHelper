@@ -32,7 +32,7 @@ import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraftforge.client.event.ClientChatReceivedEvent;
+import net.neoforged.neoforge.client.event.ClientChatReceivedEvent;
 
 import java.util.*;
 
