@@ -27,7 +27,6 @@ package io.github.leo3418.hbwhelper;
 
 import io.github.leo3418.hbwhelper.gui.QuickJoinMenuScreen;
 import net.minecraft.client.KeyMapping;
-import net.minecraftforge.client.ClientRegistry;
 
 /**
  * Stores all custom key bindings of this mod, and provides a method for
@@ -60,6 +59,6 @@ public class KeyBindings {
      * Registers this mod's key bindings.
      */
     static void registerBindings() {
-        ClientRegistry.registerKeyBinding(QUICK_JOIN);
+//        ClientRegistry.registerKeyBinding(QUICK_JOIN);
     }
 }

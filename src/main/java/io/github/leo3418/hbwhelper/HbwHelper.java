@@ -26,7 +26,7 @@
 package io.github.leo3418.hbwhelper;
 
 import io.github.leo3418.hbwhelper.gui.ConfigScreen;
-import net.minecraftforge.client.ConfigGuiHandler;
+import net.minecraftforge.client.ConfigScreenHandler;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
@@ -46,8 +46,8 @@ public final class HbwHelper {
         FMLJavaModLoadingContext.get().getModEventBus()
                 .addListener(this::clientSetup);
         ModLoadingContext context = ModLoadingContext.get();
-        context.registerExtensionPoint(ConfigGuiHandler.ConfigGuiFactory.class,
-                () -> new ConfigGuiHandler.ConfigGuiFactory((mc, screen) -> new ConfigScreen(screen)));
+        context.registerExtensionPoint(ConfigScreenHandler.ConfigScreenFactory.class,
+                () -> new ConfigScreenHandler.ConfigScreenFactory((mc, screen) -> new ConfigScreen(screen)));
     }
 
     private void clientSetup(FMLClientSetupEvent event) {

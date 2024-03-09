@@ -39,10 +39,13 @@ import net.minecraft.client.gui.screens.ChatScreen;
 import com.mojang.blaze3d.platform.Lighting;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.language.I18n;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
-import net.minecraftforge.client.gui.ForgeIngameGui;
+import net.minecraftforge.client.event.RenderGuiOverlayEvent;
+import net.minecraftforge.client.gui.overlay.ForgeGui;
+import net.minecraftforge.client.gui.overlay.GuiOverlayManager;
+import net.minecraftforge.client.gui.overlay.NamedGuiOverlay;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -111,6 +114,8 @@ public class HudGui extends GuiComponent {
      */
     private static final HudGui INSTANCE = new HudGui();
 
+    private static final NamedGuiOverlay HOTBAR = GuiOverlayManager.findOverlay(new ResourceLocation("minecraft", "hotbar"));
+
     /**
      * The instance of Minecraft client
      */
@@ -146,6 +151,7 @@ public class HudGui extends GuiComponent {
         configManager = ConfigManager.getInstance();
         currentHeight = configManager.hudY();
         matrixStack = new PoseStack();
+
     }
 
     /**
@@ -165,7 +171,7 @@ public class HudGui extends GuiComponent {
      *
      * @param event the event called when an element on the HUD is rendered
      */
-    public void render(RenderGameOverlayEvent.PostLayer event) {
+    public void render(RenderGuiOverlayEvent.Post event) {
         /*
         We only need to render this GUI per one object's rendering on the HUD,
         or some vanilla elements on the HUD might not display correctly. We
@@ -174,7 +180,7 @@ public class HudGui extends GuiComponent {
         information, the HUD only renders when neither chat screen nor debug
         screen shows.
          */
-        if (shouldRender() && event.getOverlay() == ForgeIngameGui.HOTBAR_ELEMENT) {
+        if (shouldRender() && event.getOverlay() == HOTBAR) {
             if (gameDetector.isIn()) {
                 renderGameInfo();
                 renderArmorInfo();

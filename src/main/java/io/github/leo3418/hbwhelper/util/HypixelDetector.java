@@ -89,14 +89,14 @@ public class HypixelDetector {
      * @param event the event fired when client joins or leaves a server
      */
     public void update(ClientPlayerNetworkEvent event) {
-        if (event instanceof ClientPlayerNetworkEvent.LoggedInEvent) {
+        if (event instanceof ClientPlayerNetworkEvent.LoggingIn) {
             ServerData currentServer = Minecraft.getInstance()
                     .getCurrentServer();
             if (currentServer != null) {
                 String serverAddress = currentServer.ip.toLowerCase();
                 inHypixel = serverAddress.contains(HYPIXEL_DOMAIN);
             }
-        } else if (event instanceof ClientPlayerNetworkEvent.LoggedOutEvent) {
+        } else if (event instanceof ClientPlayerNetworkEvent.LoggingOut) {
             inHypixel = false;
         }
     }

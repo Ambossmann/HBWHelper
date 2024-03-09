@@ -72,7 +72,7 @@ public class ArmorReader {
      */
     public static int getProtectionLevel() {
         if (hasArmor()) {
-            return EnchantmentHelper.getItemEnchantmentLevel(
+            return EnchantmentHelper.getTagEnchantmentLevel(
                     Enchantments.ALL_DAMAGE_PROTECTION, getArmorStack());
         }
         return -1;

@@ -25,27 +25,8 @@
 
 package io.github.leo3418.hbwhelper.gui;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import io.github.leo3418.hbwhelper.ConfigManager;
-import io.github.leo3418.hbwhelper.HbwHelper;
-import io.github.leo3418.hbwhelper.KeyBindings;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.gui.components.Button;
-import net.minecraft.client.resources.language.I18n;
-import net.minecraft.Util;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TextComponent;
-import net.minecraft.network.chat.TranslatableComponent;
-
-import javax.annotation.Nonnull;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-
-import static io.github.leo3418.hbwhelper.gui.ButtonParameters.*;
-
-import net.minecraft.client.gui.components.Button.OnPress;
 
 /**
  * The GUI of this mod for the Bed Wars quick join feature.
@@ -53,423 +34,424 @@ import net.minecraft.client.gui.components.Button.OnPress;
  * @author Leo
  */
 public final class QuickJoinMenuScreen extends Screen {
-    /**
-     * Distance between this GUI's title and the top of the screen
-     */
-    private static final int TITLE_HEIGHT = 40;
-
-    /**
-     * Width of long buttons on this GUI
-     */
-    private static final int LONG_BUTTON_WIDTH = 200;
-
-    /**
-     * Width of short buttons on this GUI
-     */
-    private static final int SHORT_BUTTON_WIDTH =
-            (LONG_BUTTON_WIDTH - BUTTONS_INTERVAL) / 2;
-
-    /**
-     * Constructs a new {@link QuickJoinMenuScreen} instance.
-     */
+//    /**
+//     * Distance between this GUI's title and the top of the screen
+//     */
+//    private static final int TITLE_HEIGHT = 40;
+//
+//    /**
+//     * Width of long buttons on this GUI
+//     */
+//    private static final int LONG_BUTTON_WIDTH = 200;
+//
+//    /**
+//     * Width of short buttons on this GUI
+//     */
+//    private static final int SHORT_BUTTON_WIDTH =
+//            (LONG_BUTTON_WIDTH - BUTTONS_INTERVAL) / 2;
+//
+//    /**
+//     * Constructs a new {@link QuickJoinMenuScreen} instance.
+//     */
     public QuickJoinMenuScreen() {
-        super(new TranslatableComponent("hbwhelper.quickJoinGui.title"));
+//        super(new TranslatableComponent("hbwhelper.quickJoinGui.title"));
+        super(Component.empty());
     }
-
-    /**
-     * Returns a {@link List} of buttons related to Dream mode games. These
-     * buttons will either allow the user to join a Dream mode game or prompt
-     * the user to select the current Dream mode on Hypixel in mod settings.
-     * These buttons occupy a single row on this GUI.
-     *
-     * @param x width from the left edge of the Minecraft window to the left
-     *         edge of the button if the {@code List} will only have one button,
-     *         or the left edge of the first button on the left if the
-     *         {@code List} will have multiple buttons
-     * @param y height from the top edge of the Minecraft window to the top
-     *         edges of the buttons
-     * @return the {@code List} of buttons related to Dream mode games
-     */
-    private List<QuickJoinMenuButton> getDreamButtons(int x, int y) {
-//        List<QuickJoinMenuButton> buttons = new ArrayList<>(2);
-//        switch (ConfigManager.getInstance().currentDreamMode()) {
-//            case RUSH:
-//                buttons.add(new QuickJoinMenuButton(
-//                        QuickJoinMenuButton.Variant.SHORT,
-//                        x, y,
-//                        I18n.get("hbwhelper.dream.rush") + " " +
-//                                I18n.get("hbwhelper.quickJoinGui.doubles"),
-//                        this,
-//                        CommandAction.PLAY_RUSH_DOUBLES));
-//                buttons.add(new QuickJoinMenuButton(
-//                        QuickJoinMenuButton.Variant.SHORT,
-//                        x + SHORT_BUTTON_WIDTH + BUTTONS_INTERVAL, y,
-//                        I18n.get("hbwhelper.dream.rush") + " " +
-//                                I18n.get("hbwhelper.quickJoinGui.4v4v4v4"),
-//                        this,
-//                        CommandAction.PLAY_RUSH_4V4V4V4));
-//                return buttons;
-//            case ULTIMATE:
-//                buttons.add(new QuickJoinMenuButton(
-//                        QuickJoinMenuButton.Variant.SHORT,
-//                        x, y,
-//                        I18n.get("hbwhelper.dream.ultimate") + " " +
-//                                I18n.get("hbwhelper.quickJoinGui.doubles"),
-//                        this,
-//                        CommandAction.PLAY_ULTIMATE_DOUBLES));
-//                buttons.add(new QuickJoinMenuButton(
-//                        QuickJoinMenuButton.Variant.SHORT,
-//                        x + SHORT_BUTTON_WIDTH + BUTTONS_INTERVAL, y,
-//                        I18n.get("hbwhelper.dream.ultimate") + " " +
-//                                I18n.get("hbwhelper.quickJoinGui.4v4v4v4"),
-//                        this,
-//                        CommandAction.PLAY_ULTIMATE_4V4V4V4));
-//                return buttons;
-//            case CASTLE:
-//                buttons.add(new QuickJoinMenuButton(
-//                        QuickJoinMenuButton.Variant.LONG, x, y,
-//                        I18n.get("hbwhelper.dream.castle"),
-//                        this,
-//                        CommandAction.PLAY_CASTLE));
-//                return buttons;
-//            case LUCKY_BLOCKS:
-//                buttons.add(new QuickJoinMenuButton(
-//                        QuickJoinMenuButton.Variant.SHORT,
-//                        x, y,
-//                        // Translation key `hbwhelper.quickJoinGui.luckyBlocks`
-//                        // is used instead of `hbwhelper.dream.luckyBlocks` to
-//                        // avoid long text not fitting into a short button
-//                        I18n.get("hbwhelper.quickJoinGui.luckyBlocks") + " " +
-//                                I18n.get("hbwhelper.quickJoinGui.doubles"),
-//                        this,
-//                        CommandAction.PLAY_LUCKY_BLOCKS_DOUBLES));
-//                buttons.add(new QuickJoinMenuButton(
-//                        QuickJoinMenuButton.Variant.SHORT,
-//                        x + SHORT_BUTTON_WIDTH + BUTTONS_INTERVAL, y,
-//                        I18n.get("hbwhelper.quickJoinGui.luckyBlocks") + " " +
-//                                I18n.get("hbwhelper.quickJoinGui.4v4v4v4"),
-//                        this,
-//                        CommandAction.PLAY_LUCKY_BLOCKS_4V4V4V4));
-//                return buttons;
-//            case VOIDLESS:
-//                buttons.add(new QuickJoinMenuButton(
-//                        QuickJoinMenuButton.Variant.SHORT,
-//                        x, y,
-//                        I18n.get("hbwhelper.dream.voidless") + " " +
-//                                I18n.get("hbwhelper.quickJoinGui.doubles"),
-//                        this,
-//                        CommandAction.PLAY_VOIDLESS_DOUBLES));
-//                buttons.add(new QuickJoinMenuButton(
-//                        QuickJoinMenuButton.Variant.SHORT,
-//                        x + SHORT_BUTTON_WIDTH + BUTTONS_INTERVAL, y,
-//                        I18n.get("hbwhelper.dream.voidless") + " " +
-//                                I18n.get("hbwhelper.quickJoinGui.4v4v4v4"),
-//                        this,
-//                        CommandAction.PLAY_VOIDLESS_4V4V4V4));
-//                return buttons;
-//            case ARMED:
-//                buttons.add(new QuickJoinMenuButton(
-//                        QuickJoinMenuButton.Variant.SHORT,
-//                        x, y,
-//                        I18n.get("hbwhelper.dream.armed") + " " +
-//                                I18n.get("hbwhelper.quickJoinGui.doubles"),
-//                        this,
-//                        CommandAction.PLAY_ARMED_DOUBLES));
-//                buttons.add(new QuickJoinMenuButton(
-//                        QuickJoinMenuButton.Variant.SHORT,
-//                        x + SHORT_BUTTON_WIDTH + BUTTONS_INTERVAL, y,
-//                        I18n.get("hbwhelper.dream.armed") + " " +
-//                                I18n.get("hbwhelper.quickJoinGui.4v4v4v4"),
-//                        this,
-//                        CommandAction.PLAY_ARMED_4V4V4V4));
-//                return buttons;
-//            default:
-//                buttons.add(new QuickJoinMenuButton(
-//                        QuickJoinMenuButton.Variant.LONG, x, y,
-//                        I18n.get("hbwhelper.quickJoinGui.dream"),
-//                        this,
-//                        PromptAction.SET_DREAM_MODE));
-//                return buttons;
+//
+//    /**
+//     * Returns a {@link List} of buttons related to Dream mode games. These
+//     * buttons will either allow the user to join a Dream mode game or prompt
+//     * the user to select the current Dream mode on Hypixel in mod settings.
+//     * These buttons occupy a single row on this GUI.
+//     *
+//     * @param x width from the left edge of the Minecraft window to the left
+//     *         edge of the button if the {@code List} will only have one button,
+//     *         or the left edge of the first button on the left if the
+//     *         {@code List} will have multiple buttons
+//     * @param y height from the top edge of the Minecraft window to the top
+//     *         edges of the buttons
+//     * @return the {@code List} of buttons related to Dream mode games
+//     */
+//    private List<QuickJoinMenuButton> getDreamButtons(int x, int y) {
+////        List<QuickJoinMenuButton> buttons = new ArrayList<>(2);
+////        switch (ConfigManager.getInstance().currentDreamMode()) {
+////            case RUSH:
+////                buttons.add(new QuickJoinMenuButton(
+////                        QuickJoinMenuButton.Variant.SHORT,
+////                        x, y,
+////                        I18n.get("hbwhelper.dream.rush") + " " +
+////                                I18n.get("hbwhelper.quickJoinGui.doubles"),
+////                        this,
+////                        CommandAction.PLAY_RUSH_DOUBLES));
+////                buttons.add(new QuickJoinMenuButton(
+////                        QuickJoinMenuButton.Variant.SHORT,
+////                        x + SHORT_BUTTON_WIDTH + BUTTONS_INTERVAL, y,
+////                        I18n.get("hbwhelper.dream.rush") + " " +
+////                                I18n.get("hbwhelper.quickJoinGui.4v4v4v4"),
+////                        this,
+////                        CommandAction.PLAY_RUSH_4V4V4V4));
+////                return buttons;
+////            case ULTIMATE:
+////                buttons.add(new QuickJoinMenuButton(
+////                        QuickJoinMenuButton.Variant.SHORT,
+////                        x, y,
+////                        I18n.get("hbwhelper.dream.ultimate") + " " +
+////                                I18n.get("hbwhelper.quickJoinGui.doubles"),
+////                        this,
+////                        CommandAction.PLAY_ULTIMATE_DOUBLES));
+////                buttons.add(new QuickJoinMenuButton(
+////                        QuickJoinMenuButton.Variant.SHORT,
+////                        x + SHORT_BUTTON_WIDTH + BUTTONS_INTERVAL, y,
+////                        I18n.get("hbwhelper.dream.ultimate") + " " +
+////                                I18n.get("hbwhelper.quickJoinGui.4v4v4v4"),
+////                        this,
+////                        CommandAction.PLAY_ULTIMATE_4V4V4V4));
+////                return buttons;
+////            case CASTLE:
+////                buttons.add(new QuickJoinMenuButton(
+////                        QuickJoinMenuButton.Variant.LONG, x, y,
+////                        I18n.get("hbwhelper.dream.castle"),
+////                        this,
+////                        CommandAction.PLAY_CASTLE));
+////                return buttons;
+////            case LUCKY_BLOCKS:
+////                buttons.add(new QuickJoinMenuButton(
+////                        QuickJoinMenuButton.Variant.SHORT,
+////                        x, y,
+////                        // Translation key `hbwhelper.quickJoinGui.luckyBlocks`
+////                        // is used instead of `hbwhelper.dream.luckyBlocks` to
+////                        // avoid long text not fitting into a short button
+////                        I18n.get("hbwhelper.quickJoinGui.luckyBlocks") + " " +
+////                                I18n.get("hbwhelper.quickJoinGui.doubles"),
+////                        this,
+////                        CommandAction.PLAY_LUCKY_BLOCKS_DOUBLES));
+////                buttons.add(new QuickJoinMenuButton(
+////                        QuickJoinMenuButton.Variant.SHORT,
+////                        x + SHORT_BUTTON_WIDTH + BUTTONS_INTERVAL, y,
+////                        I18n.get("hbwhelper.quickJoinGui.luckyBlocks") + " " +
+////                                I18n.get("hbwhelper.quickJoinGui.4v4v4v4"),
+////                        this,
+////                        CommandAction.PLAY_LUCKY_BLOCKS_4V4V4V4));
+////                return buttons;
+////            case VOIDLESS:
+////                buttons.add(new QuickJoinMenuButton(
+////                        QuickJoinMenuButton.Variant.SHORT,
+////                        x, y,
+////                        I18n.get("hbwhelper.dream.voidless") + " " +
+////                                I18n.get("hbwhelper.quickJoinGui.doubles"),
+////                        this,
+////                        CommandAction.PLAY_VOIDLESS_DOUBLES));
+////                buttons.add(new QuickJoinMenuButton(
+////                        QuickJoinMenuButton.Variant.SHORT,
+////                        x + SHORT_BUTTON_WIDTH + BUTTONS_INTERVAL, y,
+////                        I18n.get("hbwhelper.dream.voidless") + " " +
+////                                I18n.get("hbwhelper.quickJoinGui.4v4v4v4"),
+////                        this,
+////                        CommandAction.PLAY_VOIDLESS_4V4V4V4));
+////                return buttons;
+////            case ARMED:
+////                buttons.add(new QuickJoinMenuButton(
+////                        QuickJoinMenuButton.Variant.SHORT,
+////                        x, y,
+////                        I18n.get("hbwhelper.dream.armed") + " " +
+////                                I18n.get("hbwhelper.quickJoinGui.doubles"),
+////                        this,
+////                        CommandAction.PLAY_ARMED_DOUBLES));
+////                buttons.add(new QuickJoinMenuButton(
+////                        QuickJoinMenuButton.Variant.SHORT,
+////                        x + SHORT_BUTTON_WIDTH + BUTTONS_INTERVAL, y,
+////                        I18n.get("hbwhelper.dream.armed") + " " +
+////                                I18n.get("hbwhelper.quickJoinGui.4v4v4v4"),
+////                        this,
+////                        CommandAction.PLAY_ARMED_4V4V4V4));
+////                return buttons;
+////            default:
+////                buttons.add(new QuickJoinMenuButton(
+////                        QuickJoinMenuButton.Variant.LONG, x, y,
+////                        I18n.get("hbwhelper.quickJoinGui.dream"),
+////                        this,
+////                        PromptAction.SET_DREAM_MODE));
+////                return buttons;
+////        }
+//        return null;
+//    }
+//
+//    /**
+//     * Initializes this GUI with buttons.
+//     */
+//    @Override
+//    @SuppressWarnings("ConstantConditions")
+//    protected void init() {
+////        int buttonX = (this.width - LONG_BUTTON_WIDTH) / 2;
+////        int firstButtonY = this.height / 4 + BUTTONS_INTERVAL;
+////        // Number of lines of buttons added so far, used for calculating height
+////        // of the next button
+////        int line = 0;
+////        addButton(new QuickJoinMenuButton(
+////                QuickJoinMenuButton.Variant.LONG,
+////                buttonX, firstButtonY + (line++ * BUTTONS_TRANSLATION_INTERVAL),
+////                I18n.get("hbwhelper.quickJoinGui.solo"), this,
+////                CommandAction.PLAY_SOLO
+////        ));
+////        addButton(new QuickJoinMenuButton(
+////                QuickJoinMenuButton.Variant.LONG,
+////                buttonX, firstButtonY + (line++ * BUTTONS_TRANSLATION_INTERVAL),
+////                I18n.get("hbwhelper.quickJoinGui.doubles"), this,
+////                CommandAction.PLAY_DOUBLES
+////        ));
+////        addButton(new QuickJoinMenuButton(
+////                QuickJoinMenuButton.Variant.LONG,
+////                buttonX, firstButtonY + (line++ * BUTTONS_TRANSLATION_INTERVAL),
+////                I18n.get("hbwhelper.quickJoinGui.3v3v3v3"), this,
+////                CommandAction.PLAY_3V3V3V3
+////        ));
+////        addButton(new QuickJoinMenuButton(
+////                QuickJoinMenuButton.Variant.LONG,
+////                buttonX, firstButtonY + (line++ * BUTTONS_TRANSLATION_INTERVAL),
+////                I18n.get("hbwhelper.quickJoinGui.4v4v4v4"), this,
+////                CommandAction.PLAY_4V4V4V4
+////        ));
+////        addButton(new QuickJoinMenuButton(
+////                QuickJoinMenuButton.Variant.LONG,
+////                buttonX, firstButtonY + (line++ * BUTTONS_TRANSLATION_INTERVAL),
+////                I18n.get("hbwhelper.quickJoinGui.4v4"), this,
+////                CommandAction.PLAY_4V4
+////        ));
+////        getDreamButtons(buttonX,
+////                firstButtonY + (line++ * BUTTONS_TRANSLATION_INTERVAL))
+////                .forEach(this::addButton);
+////        // The following should always be the last button
+////        addButton(new QuickJoinMenuButton(
+////                QuickJoinMenuButton.Variant.LONG,
+////                buttonX, firstButtonY + (line * BUTTONS_TRANSLATION_INTERVAL),
+////                I18n.get("hbwhelper.quickJoinGui.backToGame"), this
+////        ));
+//    }
+//
+//    /**
+//     * Draws this GUI on the screen.
+//     *
+//     * @param matrixStack the matrix stack
+//     * @param mouseX horizontal location of the mouse
+//     * @param mouseY vertical location of the mouse
+//     * @param partialTicks number of partial ticks
+//     */
+//    @Override
+//    public void render(@Nonnull PoseStack matrixStack,
+//                       int mouseX, int mouseY, float partialTicks) {
+//        this.renderBackground(matrixStack);
+//        drawCenteredString(matrixStack, this.font, this.title.getString(),
+//                this.width / 2, TITLE_HEIGHT, 0xFFFFFF);
+//        super.render(matrixStack, mouseX, mouseY, partialTicks);
+//    }
+//
+//    /**
+//     * When a key is typed when this GUI is shown, checks which key is pressed,
+//     * and closes this GUI if client presses {@code ESC} or the hot key for Bed
+//     * Wars quick join.
+//     *
+//     * @param keyCode1 the key code of the first key being pressed
+//     * @param keyCode2 the key code of the second key being pressed
+//     * @param keyCode3 the key code of the third key being pressed
+//     * @return whether the key press is handled by this GUI
+//     */
+//    @Override
+//    public boolean keyPressed(int keyCode1, int keyCode2, int keyCode3) {
+//        int quickJoinKeyCode = KeyBindings.QUICK_JOIN.getKey().getValue();
+//        if (quickJoinKeyCode == keyCode1
+//                || quickJoinKeyCode == keyCode2
+//                || quickJoinKeyCode == keyCode3) {
+//            onClose();
+//            return true;
+//        } else {
+//            return super.keyPressed(keyCode1, keyCode2, keyCode3);
 //        }
-        return null;
-    }
-
-    /**
-     * Initializes this GUI with buttons.
-     */
-    @Override
-    @SuppressWarnings("ConstantConditions")
-    protected void init() {
-//        int buttonX = (this.width - LONG_BUTTON_WIDTH) / 2;
-//        int firstButtonY = this.height / 4 + BUTTONS_INTERVAL;
-//        // Number of lines of buttons added so far, used for calculating height
-//        // of the next button
-//        int line = 0;
-//        addButton(new QuickJoinMenuButton(
-//                QuickJoinMenuButton.Variant.LONG,
-//                buttonX, firstButtonY + (line++ * BUTTONS_TRANSLATION_INTERVAL),
-//                I18n.get("hbwhelper.quickJoinGui.solo"), this,
-//                CommandAction.PLAY_SOLO
-//        ));
-//        addButton(new QuickJoinMenuButton(
-//                QuickJoinMenuButton.Variant.LONG,
-//                buttonX, firstButtonY + (line++ * BUTTONS_TRANSLATION_INTERVAL),
-//                I18n.get("hbwhelper.quickJoinGui.doubles"), this,
-//                CommandAction.PLAY_DOUBLES
-//        ));
-//        addButton(new QuickJoinMenuButton(
-//                QuickJoinMenuButton.Variant.LONG,
-//                buttonX, firstButtonY + (line++ * BUTTONS_TRANSLATION_INTERVAL),
-//                I18n.get("hbwhelper.quickJoinGui.3v3v3v3"), this,
-//                CommandAction.PLAY_3V3V3V3
-//        ));
-//        addButton(new QuickJoinMenuButton(
-//                QuickJoinMenuButton.Variant.LONG,
-//                buttonX, firstButtonY + (line++ * BUTTONS_TRANSLATION_INTERVAL),
-//                I18n.get("hbwhelper.quickJoinGui.4v4v4v4"), this,
-//                CommandAction.PLAY_4V4V4V4
-//        ));
-//        addButton(new QuickJoinMenuButton(
-//                QuickJoinMenuButton.Variant.LONG,
-//                buttonX, firstButtonY + (line++ * BUTTONS_TRANSLATION_INTERVAL),
-//                I18n.get("hbwhelper.quickJoinGui.4v4"), this,
-//                CommandAction.PLAY_4V4
-//        ));
-//        getDreamButtons(buttonX,
-//                firstButtonY + (line++ * BUTTONS_TRANSLATION_INTERVAL))
-//                .forEach(this::addButton);
-//        // The following should always be the last button
-//        addButton(new QuickJoinMenuButton(
-//                QuickJoinMenuButton.Variant.LONG,
-//                buttonX, firstButtonY + (line * BUTTONS_TRANSLATION_INTERVAL),
-//                I18n.get("hbwhelper.quickJoinGui.backToGame"), this
-//        ));
-    }
-
-    /**
-     * Draws this GUI on the screen.
-     *
-     * @param matrixStack the matrix stack
-     * @param mouseX horizontal location of the mouse
-     * @param mouseY vertical location of the mouse
-     * @param partialTicks number of partial ticks
-     */
-    @Override
-    public void render(@Nonnull PoseStack matrixStack,
-                       int mouseX, int mouseY, float partialTicks) {
-        this.renderBackground(matrixStack);
-        drawCenteredString(matrixStack, this.font, this.title.getString(),
-                this.width / 2, TITLE_HEIGHT, 0xFFFFFF);
-        super.render(matrixStack, mouseX, mouseY, partialTicks);
-    }
-
-    /**
-     * When a key is typed when this GUI is shown, checks which key is pressed,
-     * and closes this GUI if client presses {@code ESC} or the hot key for Bed
-     * Wars quick join.
-     *
-     * @param keyCode1 the key code of the first key being pressed
-     * @param keyCode2 the key code of the second key being pressed
-     * @param keyCode3 the key code of the third key being pressed
-     * @return whether the key press is handled by this GUI
-     */
-    @Override
-    public boolean keyPressed(int keyCode1, int keyCode2, int keyCode3) {
-        int quickJoinKeyCode = KeyBindings.QUICK_JOIN.getKey().getValue();
-        if (quickJoinKeyCode == keyCode1
-                || quickJoinKeyCode == keyCode2
-                || quickJoinKeyCode == keyCode3) {
-            onClose();
-            return true;
-        } else {
-            return super.keyPressed(keyCode1, keyCode2, keyCode3);
-        }
-    }
-
-    /**
-     * Enumeration of {@link Button.IPressable} implementations that runs a
-     * Minecraft command when a {@link QuickJoinMenuButton} is pressed.
-     */
-    private enum CommandAction implements Button.OnPress {
-        PLAY_SOLO("/play bedwars_eight_one"),
-        PLAY_DOUBLES("/play bedwars_eight_two"),
-        PLAY_3V3V3V3("/play bedwars_four_three"),
-        PLAY_4V4V4V4("/play bedwars_four_four"),
-        PLAY_4V4("/play bedwars_two_four"),
-        PLAY_RUSH_DOUBLES("/play bedwars_eight_two_rush"),
-        PLAY_RUSH_4V4V4V4("/play bedwars_four_four_rush"),
-        PLAY_ULTIMATE_DOUBLES("/play bedwars_eight_two_ultimate"),
-        PLAY_ULTIMATE_4V4V4V4("/play bedwars_four_four_ultimate"),
-        PLAY_CASTLE("/play bedwars_castle"),
-        PLAY_LUCKY_BLOCKS_DOUBLES("/play bedwars_eight_two_lucky"),
-        PLAY_LUCKY_BLOCKS_4V4V4V4("/play bedwars_four_four_lucky"),
-        PLAY_VOIDLESS_DOUBLES("/play bedwars_eight_two_voidless"),
-        PLAY_VOIDLESS_4V4V4V4("/play bedwars_four_four_voidless"),
-        PLAY_ARMED_DOUBLES("/play bedwars_eight_two_armed"),
-        PLAY_ARMED_4V4V4V4("/play bedwars_four_four_armed");
-
-        /**
-         * The command being run when this {@code CommandAction} is performed
-         */
-        private final String command;
-
-        /**
-         * Constructs a new constant of {@link Button.IPressable}
-         * implementation that runs a Minecraft command.
-         *
-         * @param command the command to be run when this {@code CommandAction}
-         *         is performed
-         */
-        CommandAction(String command) {
-            this.command = command;
-        }
-
-        /**
-         * Runs the command defined for this {@link Button.IPressable}
-         * implementation.
-         *
-         * @param button the {@link Button} being pressed
-         */
-        @Override
-        public void onPress(@Nonnull Button button) {
-            Objects.requireNonNull(Minecraft.getInstance().player)
-                    .chat(command);
-        }
-    }
-
-    /**
-     * Enumeration of {@link Button.IPressable} implementations that
-     * shows a prompt in chat messages when a {@link QuickJoinMenuButton} is
-     * pressed.
-     */
-    private enum PromptAction implements Button.OnPress {
-        /**
-         * The prompt that reminds the user to select the current game variant
-         * for the Bed Wars Dream mode
-         */
-        SET_DREAM_MODE(new TranslatableComponent(
-                "hbwhelper.messages.setDreamMode", HbwHelper.NAME));
-
-        /**
-         * The prompt being shown when this {@code PromptAction} is performed
-         */
-        private final Component prompt;
-
-        /**
-         * Constructs a new constant of {@link Button.IPressable}
-         * implementation that shows a prompt in chat messages.
-         *
-         * @param prompt the prompt being shown when this {@code PromptAction}
-         *         is performed
-         */
-        PromptAction(Component prompt) {
-            this.prompt = prompt;
-        }
-
-        /**
-         * Shows the prompt defined for this {@link Button.IPressable}
-         * implementation.
-         *
-         * @param button the {@link Button} being pressed
-         */
-        @Override
-        public void onPress(@Nonnull Button button) {
-            Objects.requireNonNull(Minecraft.getInstance().player)
-                    .sendMessage(prompt, Util.NIL_UUID);
-        }
-    }
-
-    /**
-     * A button shown on this GUI screen.
-     */
-    private static class QuickJoinMenuButton extends Button {
-        /**
-         * Cache of a {@link Button.IPressable} object which defines no action
-         * for a button
-         */
-        private static final OnPress NO_ACTION = button -> {
-        };
-
-        /**
-         * The {@link QuickJoinMenuScreen} in which this button is
-         */
-        private final QuickJoinMenuScreen parent;
-
-        /**
-         * Constructs a new button for this GUI that does not perform any
-         * action when pressed.
-         *
-         * @param variant the {@link Variant Variant} of the button's width
-         * @param x the horizontal location of this button on the GUI
-         * @param y the vertical location of this button on the GUI
-         * @param buttonText the text shown on this button
-         * @param parent the {@link QuickJoinMenuScreen} in which this button is
-         */
-        private QuickJoinMenuButton(Variant variant, int x, int y,
-                                    String buttonText,
-                                    QuickJoinMenuScreen parent) {
-            this(variant, x, y, buttonText, parent, NO_ACTION);
-        }
-
-        /**
-         * Constructs a new button for this GUI that performs an action when
-         * pressed.
-         *
-         * @param variant the {@link Variant Variant} of the button's width
-         * @param x the horizontal location of this button on the GUI
-         * @param y the vertical location of this button on the GUI
-         * @param buttonText the text shown on this button
-         * @param parent the {@link QuickJoinMenuScreen} in which this button is
-         * @param action the {@linkplain Button.IPressable action} performed
-         *         when this button is pressed
-         */
-        private QuickJoinMenuButton(Variant variant, int x, int y,
-                                    String buttonText,
-                                    QuickJoinMenuScreen parent,
-                                    OnPress action) {
-            super(x, y, variant.width, BUTTON_HEIGHT,
-                    new TextComponent(buttonText), action);
-            this.parent = parent;
-        }
-
-        /**
-         * Runs any action defined for this button. This method is called when
-         * this button is clicked.
-         */
-        @Override
-        public void onPress() {
-            super.onPress();
-            parent.onClose();
-        }
-
-        /**
-         * Enumeration of variants of the button.
-         */
-        private enum Variant {
-            /**
-             * Long button, whose width is the same as a default Minecraft
-             * button
-             */
-            LONG(LONG_BUTTON_WIDTH),
-            /**
-             * Short button, whose width times 2 plus the default interval
-             * between two Minecraft buttons would be the same as a long button
-             */
-            SHORT(SHORT_BUTTON_WIDTH);
-
-            /**
-             * Width of a button of this variant
-             */
-            private final int width;
-
-            /**
-             * Constructs a new constant of variants of the button.
-             *
-             * @param width the width of a button of this variant
-             */
-            Variant(int width) {
-                this.width = width;
-            }
-        }
-    }
+//    }
+//
+//    /**
+//     * Enumeration of {@link Button.IPressable} implementations that runs a
+//     * Minecraft command when a {@link QuickJoinMenuButton} is pressed.
+//     */
+//    private enum CommandAction implements Button.OnPress {
+//        PLAY_SOLO("/play bedwars_eight_one"),
+//        PLAY_DOUBLES("/play bedwars_eight_two"),
+//        PLAY_3V3V3V3("/play bedwars_four_three"),
+//        PLAY_4V4V4V4("/play bedwars_four_four"),
+//        PLAY_4V4("/play bedwars_two_four"),
+//        PLAY_RUSH_DOUBLES("/play bedwars_eight_two_rush"),
+//        PLAY_RUSH_4V4V4V4("/play bedwars_four_four_rush"),
+//        PLAY_ULTIMATE_DOUBLES("/play bedwars_eight_two_ultimate"),
+//        PLAY_ULTIMATE_4V4V4V4("/play bedwars_four_four_ultimate"),
+//        PLAY_CASTLE("/play bedwars_castle"),
+//        PLAY_LUCKY_BLOCKS_DOUBLES("/play bedwars_eight_two_lucky"),
+//        PLAY_LUCKY_BLOCKS_4V4V4V4("/play bedwars_four_four_lucky"),
+//        PLAY_VOIDLESS_DOUBLES("/play bedwars_eight_two_voidless"),
+//        PLAY_VOIDLESS_4V4V4V4("/play bedwars_four_four_voidless"),
+//        PLAY_ARMED_DOUBLES("/play bedwars_eight_two_armed"),
+//        PLAY_ARMED_4V4V4V4("/play bedwars_four_four_armed");
+//
+//        /**
+//         * The command being run when this {@code CommandAction} is performed
+//         */
+//        private final String command;
+//
+//        /**
+//         * Constructs a new constant of {@link Button.IPressable}
+//         * implementation that runs a Minecraft command.
+//         *
+//         * @param command the command to be run when this {@code CommandAction}
+//         *         is performed
+//         */
+//        CommandAction(String command) {
+//            this.command = command;
+//        }
+//
+//        /**
+//         * Runs the command defined for this {@link Button.IPressable}
+//         * implementation.
+//         *
+//         * @param button the {@link Button} being pressed
+//         */
+//        @Override
+//        public void onPress(@Nonnull Button button) {
+//            Objects.requireNonNull(Minecraft.getInstance().player)
+//                    .chat(command);
+//        }
+//    }
+//
+//    /**
+//     * Enumeration of {@link Button.IPressable} implementations that
+//     * shows a prompt in chat messages when a {@link QuickJoinMenuButton} is
+//     * pressed.
+//     */
+//    private enum PromptAction implements Button.OnPress {
+//        /**
+//         * The prompt that reminds the user to select the current game variant
+//         * for the Bed Wars Dream mode
+//         */
+//        SET_DREAM_MODE(new TranslatableComponent(
+//                "hbwhelper.messages.setDreamMode", HbwHelper.NAME));
+//
+//        /**
+//         * The prompt being shown when this {@code PromptAction} is performed
+//         */
+//        private final Component prompt;
+//
+//        /**
+//         * Constructs a new constant of {@link Button.IPressable}
+//         * implementation that shows a prompt in chat messages.
+//         *
+//         * @param prompt the prompt being shown when this {@code PromptAction}
+//         *         is performed
+//         */
+//        PromptAction(Component prompt) {
+//            this.prompt = prompt;
+//        }
+//
+//        /**
+//         * Shows the prompt defined for this {@link Button.IPressable}
+//         * implementation.
+//         *
+//         * @param button the {@link Button} being pressed
+//         */
+//        @Override
+//        public void onPress(@Nonnull Button button) {
+//            Objects.requireNonNull(Minecraft.getInstance().player)
+//                    .sendMessage(prompt, Util.NIL_UUID);
+//        }
+//    }
+//
+//    /**
+//     * A button shown on this GUI screen.
+//     */
+//    private static class QuickJoinMenuButton extends Button {
+//        /**
+//         * Cache of a {@link Button.IPressable} object which defines no action
+//         * for a button
+//         */
+//        private static final OnPress NO_ACTION = button -> {
+//        };
+//
+//        /**
+//         * The {@link QuickJoinMenuScreen} in which this button is
+//         */
+//        private final QuickJoinMenuScreen parent;
+//
+//        /**
+//         * Constructs a new button for this GUI that does not perform any
+//         * action when pressed.
+//         *
+//         * @param variant the {@link Variant Variant} of the button's width
+//         * @param x the horizontal location of this button on the GUI
+//         * @param y the vertical location of this button on the GUI
+//         * @param buttonText the text shown on this button
+//         * @param parent the {@link QuickJoinMenuScreen} in which this button is
+//         */
+//        private QuickJoinMenuButton(Variant variant, int x, int y,
+//                                    String buttonText,
+//                                    QuickJoinMenuScreen parent) {
+//            this(variant, x, y, buttonText, parent, NO_ACTION);
+//        }
+//
+//        /**
+//         * Constructs a new button for this GUI that performs an action when
+//         * pressed.
+//         *
+//         * @param variant the {@link Variant Variant} of the button's width
+//         * @param x the horizontal location of this button on the GUI
+//         * @param y the vertical location of this button on the GUI
+//         * @param buttonText the text shown on this button
+//         * @param parent the {@link QuickJoinMenuScreen} in which this button is
+//         * @param action the {@linkplain Button.IPressable action} performed
+//         *         when this button is pressed
+//         */
+//        private QuickJoinMenuButton(Variant variant, int x, int y,
+//                                    String buttonText,
+//                                    QuickJoinMenuScreen parent,
+//                                    OnPress action) {
+//            super(x, y, variant.width, BUTTON_HEIGHT,
+//                    new TextComponent(buttonText), action);
+//            this.parent = parent;
+//        }
+//
+//        /**
+//         * Runs any action defined for this button. This method is called when
+//         * this button is clicked.
+//         */
+//        @Override
+//        public void onPress() {
+//            super.onPress();
+//            parent.onClose();
+//        }
+//
+//        /**
+//         * Enumeration of variants of the button.
+//         */
+//        private enum Variant {
+//            /**
+//             * Long button, whose width is the same as a default Minecraft
+//             * button
+//             */
+//            LONG(LONG_BUTTON_WIDTH),
+//            /**
+//             * Short button, whose width times 2 plus the default interval
+//             * between two Minecraft buttons would be the same as a long button
+//             */
+//            SHORT(SHORT_BUTTON_WIDTH);
+//
+//            /**
+//             * Width of a button of this variant
+//             */
+//            private final int width;
+//
+//            /**
+//             * Constructs a new constant of variants of the button.
+//             *
+//             * @param width the width of a button of this variant
+//             */
+//            Variant(int width) {
+//                this.width = width;
+//            }
+//        }
+//    }
 }

@@ -138,7 +138,7 @@ public class GameDetector {
      * @param event the event fired when the screen with dirt background shows
      *         up
      */
-    public void update(ScreenEvent.InitScreenEvent.Post event) {
+    public void update(ScreenEvent.Init.Post event) {
         if (inBedWars && event.getScreen() instanceof ReceivingLevelScreen) {
             inBedWars = false;
             EventManager.EVENT_BUS.post(new ClientLeaveGameEvent());
@@ -164,7 +164,7 @@ public class GameDetector {
      */
     public void update(ClientPlayerNetworkEvent event) {
         if (inBedWars
-                && event instanceof ClientPlayerNetworkEvent.LoggedOutEvent) {
+                && event instanceof ClientPlayerNetworkEvent.LoggingOut) {
             /*
             GuiOpenEvent will not be called when client disconnects, so we need
             to detect ClientPlayerNetworkEvent.LoggedOutEvent

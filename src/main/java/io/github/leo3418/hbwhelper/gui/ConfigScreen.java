@@ -30,7 +30,7 @@ import io.github.leo3418.hbwhelper.ConfigManager;
 import io.github.leo3418.hbwhelper.HbwHelper;
 import net.minecraft.client.gui.components.OptionsList;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.network.chat.Component;
 
 import javax.annotation.Nonnull;
 import java.util.Objects;
@@ -100,7 +100,7 @@ public final class ConfigScreen extends Screen {
      * @param parentScreen the screen that will become this screen's parent
      */
     public ConfigScreen(Screen parentScreen) {
-        super(new TranslatableComponent("hbwhelper.configGui.title",
+        super(Component.translatable("hbwhelper.configGui.title",
                 HbwHelper.NAME));
         this.parentScreen = parentScreen;
     }

@@ -34,10 +34,8 @@ import io.github.leo3418.hbwhelper.util.GameDetector;
 import io.github.leo3418.hbwhelper.util.HypixelDetector;
 import io.github.leo3418.hbwhelper.util.InProgressGameDetector;
 import net.minecraft.client.Minecraft;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.Util;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.TranslatableComponent;
+import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.client.event.*;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.TickEvent;
@@ -72,7 +70,7 @@ public class EventManager {
      * rejoins a Bed Wars game it was in before after Minecraft restarts
      */
     private static final Component CLIENT_RESTART_PROMPT =
-            new TranslatableComponent("hbwhelper.messages.clientRestart",
+            Component.translatable("hbwhelper.messages.clientRestart",
                     HbwHelper.NAME);
 
     /**
@@ -81,7 +79,7 @@ public class EventManager {
      * restarted
      */
     private static final Component CLIENT_REJOIN_PROMPT =
-            new TranslatableComponent("hbwhelper.messages.clientRejoin",
+            Component.translatable("hbwhelper.messages.clientRejoin",
                     HbwHelper.NAME);
 
     /**
@@ -168,7 +166,7 @@ public class EventManager {
 
     @SubscribeEvent
     @SuppressWarnings("unused")
-    public void onGuiOpen(ScreenEvent.InitScreenEvent.Post event) {
+    public void onGuiOpen(ScreenEvent.Init.Post event) {
         gameDetector.update(event);
     }
 
@@ -184,7 +182,7 @@ public class EventManager {
 
     @SubscribeEvent
     @SuppressWarnings("unused")
-    public void onRenderGameOverlay(RenderGameOverlayEvent.PostLayer event) {
+    public void onRenderGameOverlay(RenderGuiOverlayEvent.Post event) {
         hudGui.render(event);
     }
 
@@ -222,11 +220,11 @@ public class EventManager {
                 Objects.requireNonNull(Minecraft.getInstance().player);
         if (GameManager.getInstance() == null) {
             // Client is rejoining a Bed Wars game after restart of Minecraft
-            player.sendMessage(CLIENT_RESTART_PROMPT, Util.NIL_UUID);
+            player.sendSystemMessage(CLIENT_RESTART_PROMPT);
             gameTypeDetector.startDetection();
         } else {
             // Client is rejoining a Bed Wars game, but Minecraft is not closed
-            player.sendMessage(CLIENT_REJOIN_PROMPT, Util.NIL_UUID);
+            player.sendSystemMessage(CLIENT_REJOIN_PROMPT);
         }
     }
 
@@ -250,7 +248,7 @@ public class EventManager {
 
     @SubscribeEvent
     @SuppressWarnings("unused")
-    public void onKeyInput(InputEvent.KeyInputEvent event) {
+    public void onKeyInput(InputEvent.Key event) {
         if (hypixelDetector.isIn() && KeyBindings.QUICK_JOIN.consumeClick()) {
             Minecraft.getInstance().setScreen(new QuickJoinMenuScreen());
         }

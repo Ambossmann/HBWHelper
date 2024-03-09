@@ -82,7 +82,7 @@ public class TextComponents {
     public static String toFormattedText(Component textComponent) {
         Objects.requireNonNull(textComponent, "textComponent");
         StringBuilder resultBuilder = new StringBuilder();
-        String text = textComponent.getContents();
+        String text = textComponent.getString();
         if (!text.isEmpty()) {
             resultBuilder.append(formattingCodeOf(textComponent.getStyle()))
                     .append(text)
