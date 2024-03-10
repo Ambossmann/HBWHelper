@@ -25,11 +25,13 @@
 
 package io.github.leo3418.hbwhelper;
 
+import com.mojang.logging.LogUtils;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModLoadingContext;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
+import org.slf4j.Logger;
 
 /**
  * The main class of HBW Helper mod.
@@ -40,6 +42,7 @@ import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 public final class HbwHelper {
     public static final String NAME = "HBW Helper";
     public static final String MOD_ID = "hbwhelper";
+    public static final Logger LOGGER = LogUtils.getLogger();
 
     public HbwHelper(IEventBus modEventBus) {
         modEventBus.addListener(this::clientSetup);

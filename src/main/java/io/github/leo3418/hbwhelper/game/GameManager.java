@@ -25,6 +25,7 @@
 
 package io.github.leo3418.hbwhelper.game;
 
+import io.github.leo3418.hbwhelper.HbwHelper;
 import io.github.leo3418.hbwhelper.util.TextComponents;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.Entity;
@@ -320,10 +321,13 @@ public class GameManager {
     public void update(ClientChatReceivedEvent event) {
         String message = TextComponents.toFormattedText(
                 event.getMessage());
+        HbwHelper.LOGGER.info("Received chat message:\n" + message);
         if (message.contains(HEAL_POOL_PROMPT)) {
             healPool = true;
+            HbwHelper.LOGGER.info("Heal Pool enabled");
         } else if (message.contains(DRAGON_BUFF_PROMPT)) {
             dragonBuff = true;
+            HbwHelper.LOGGER.info("Dragon Buff enabled");
         } else if (message.contains(DEADSHOT_PROMPT)) {
             // Parses the message to get the upgrade's level
             int levelStart = message.indexOf(DEADSHOT_PROMPT) +
@@ -344,6 +348,7 @@ public class GameManager {
                     deadShotLevel = 4;
                     break;
             }
+            HbwHelper.LOGGER.info("Deadshot level " + level);
         } else {
             for (ForgeLevel level : ForgeLevel.values()) {
                 if (message.contains(level.prompt)) {
@@ -368,6 +373,7 @@ public class GameManager {
                         trapQueue.remove();
                     }
                     trapQueue.add(new CountedTrap(trapType, gameType.trapUses));
+                    HbwHelper.LOGGER.info("Trap " + trapType.purchasePrompt + " purchased");
                     return;
                 } else if (message.contains(trapType.setOffPrompt)) {
                     /*
@@ -388,6 +394,7 @@ public class GameManager {
                             trapQueue.remove();
                         }
                     }
+                    HbwHelper.LOGGER.info("Trap " + trapType.setOffPrompt + " set off");
                     return;
                 }
             }

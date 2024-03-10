@@ -212,6 +212,7 @@ public class EventManager {
     public void onGameStart(GameStartEvent event) {
         GameManager.clearInstance();
         gameTypeDetector.startDetection();
+        HbwHelper.LOGGER.info("Game started");
     }
 
     @SubscribeEvent
