@@ -130,11 +130,6 @@ public class HudGui extends GuiGraphics {
     private final ConfigManager configManager;
 
     /**
-     * The matrix stack used in GUI rendering
-     */
-    private final PoseStack matrixStack;
-
-    /**
      * Height of the next line of text that would be rendered
      */
     private int currentHeight;
@@ -149,8 +144,6 @@ public class HudGui extends GuiGraphics {
         gameDetector = GameDetector.getInstance();
         configManager = ConfigManager.getInstance();
         currentHeight = configManager.hudY();
-        matrixStack = new PoseStack();
-
     }
 
     /**
