@@ -29,7 +29,6 @@ import io.github.leo3418.hbwhelper.event.*;
 import io.github.leo3418.hbwhelper.game.GameManager;
 import io.github.leo3418.hbwhelper.game.GameTypeDetector;
 import io.github.leo3418.hbwhelper.gui.HudGui;
-import io.github.leo3418.hbwhelper.gui.QuickJoinMenuScreen;
 import io.github.leo3418.hbwhelper.util.GameDetector;
 import io.github.leo3418.hbwhelper.util.HypixelDetector;
 import io.github.leo3418.hbwhelper.util.InProgressGameDetector;
@@ -244,13 +243,5 @@ public class EventManager {
     @SuppressWarnings("unused")
     public void onTeleportCancelled(TeleportCancelledEvent event) {
         shouldClearGMInstance = false;
-    }
-
-    @SubscribeEvent
-    @SuppressWarnings("unused")
-    public void onKeyInput(InputEvent.Key event) {
-        if (hypixelDetector.isIn() && KeyBindings.QUICK_JOIN.consumeClick()) {
-            Minecraft.getInstance().setScreen(new QuickJoinMenuScreen());
-        }
     }
 }
