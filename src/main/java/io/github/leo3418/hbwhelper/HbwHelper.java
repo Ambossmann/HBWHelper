@@ -28,6 +28,7 @@ package io.github.leo3418.hbwhelper;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModLoadingContext;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 
 /**
@@ -43,6 +44,7 @@ public final class HbwHelper {
     public HbwHelper(IEventBus modEventBus) {
         modEventBus.addListener(this::clientSetup);
         ModLoadingContext context = ModLoadingContext.get();
+        context.registerConfig(ModConfig.Type.CLIENT, ConfigManager.getSpec());
     }
 
     private void clientSetup(FMLClientSetupEvent event) {

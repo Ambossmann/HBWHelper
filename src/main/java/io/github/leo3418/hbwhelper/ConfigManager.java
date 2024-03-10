@@ -79,25 +79,11 @@ public class ConfigManager {
      */
     private static final ModConfigSpec SPEC;
 
-    /**
-     * {@link Path} to the configuration file of this mod
-     */
-    private static final Path CONFIG_PATH =
-            Paths.get("config", MOD_ID + ".toml");
-
     static {
         Pair<ConfigManager, ModConfigSpec> specPair =
                 new ModConfigSpec.Builder().configure(ConfigManager::new);
         INSTANCE = specPair.getLeft();
         SPEC = specPair.getRight();
-        CommentedFileConfig config = CommentedFileConfig.builder(CONFIG_PATH)
-                .sync()
-                .autoreload()
-                .writingMode(WritingMode.REPLACE)
-                .build();
-        config.load();
-        config.save();
-        SPEC.setConfig(config);
     }
 
     /**
@@ -189,6 +175,10 @@ public class ConfigManager {
      */
     public static ConfigManager getInstance() {
         return INSTANCE;
+    }
+
+    public static ModConfigSpec getSpec() {
+        return SPEC;
     }
 
     // Validations
@@ -396,12 +386,5 @@ public class ConfigManager {
     public void changeCurrentDreamMode(DreamMode newValue) {
         Objects.requireNonNull(newValue, "newValue");
         currentDreamMode.set(newValue);
-    }
-
-    /**
-     * Saves changes to this mod's configuration.
-     */
-    public void save() {
-        SPEC.save();
     }
 }
