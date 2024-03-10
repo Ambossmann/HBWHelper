@@ -158,7 +158,23 @@ public class EventManager {
 
     @SubscribeEvent
     @SuppressWarnings("unused")
-    public void onClientPlayerNetworkEvent(ClientPlayerNetworkEvent event) {
+    public void onClientPlayerNetworkEvent(ClientPlayerNetworkEvent.LoggingIn event) {
+        onAbstractClientPlayerNetworkEvent(event);
+    }
+
+    @SubscribeEvent
+    @SuppressWarnings("unused")
+    public void onClientPlayerNetworkEvent(ClientPlayerNetworkEvent.LoggingOut event) {
+        onAbstractClientPlayerNetworkEvent(event);
+    }
+
+    @SubscribeEvent
+    @SuppressWarnings("unused")
+    public void onClientPlayerNetworkEvent(ClientPlayerNetworkEvent.Clone event) {
+        onAbstractClientPlayerNetworkEvent(event);
+    }
+
+    public void onAbstractClientPlayerNetworkEvent(ClientPlayerNetworkEvent event) {
         hypixelDetector.update(event);
         gameDetector.update(event);
     }
