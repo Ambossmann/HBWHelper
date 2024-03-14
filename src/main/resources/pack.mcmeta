@@ -1,7 +1,0 @@
-{
-    "pack": {
-        "description": "Resources for HBW Helper",
-        "pack_format": 4,
-        "_comment": "Unfortunately, because Minecraft Forge requires pack format version 4 since Minecraft 1.13, we have to convert the resource files to the new format. This creates some extra work in porting new resources to branches for older Minecraft client versions."
-    }
-}
