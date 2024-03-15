@@ -21,7 +21,7 @@
  * HBW Helper MC Exception along with this program's source code; see
  * the files LICENSE.txt and LICENSE-MCE.txt respectively.  If not, see
  * <http://www.gnu.org/licenses/> and
- * <https://github.com/Ambossmann/HBWHelper>.
+ * <https://github.com/Anvil-Mods/HBWHelper>.
  */
 package io.github.leo3418.hbwhelper.util;
 
