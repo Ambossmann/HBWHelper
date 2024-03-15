@@ -1,14 +1,15 @@
 /*
+ * Copyright (C) 2024 Ambossmann <https://github.com/Ambossmann>
  * Copyright (C) 2018-2021 Leo3418 <https://github.com/Leo3418>
  *
- * This file is part of Hypixel Bed Wars Helper (HBW Helper).
+ * This file is part of Hypixel Bed Wars Helper - Sleepover Edition (HBW Helper SE).
  *
- * HBW Helper is free software: you can redistribute it and/or modify
+ * HBW Helper SE is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License (GPL) as
  * published by the Free Software Foundation, either version 3 of the
  * License, or (at your option) any later version.
  *
- * HBW Helper is distributed in the hope that it will be useful,
+ * HBW Helper SE is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
@@ -20,13 +21,10 @@
  * HBW Helper MC Exception along with this program's source code; see
  * the files LICENSE.txt and LICENSE-MCE.txt respectively.  If not, see
  * <http://www.gnu.org/licenses/> and
- * <https://github.com/Leo3418/HBWHelper>.
+ * <https://github.com/Ambossmann/HBWHelper>.
  */
-
 package io.github.leo3418.hbwhelper;
 
-import com.electronwill.nightconfig.core.file.CommentedFileConfig;
-import com.electronwill.nightconfig.core.io.WritingMode;
 import io.github.leo3418.hbwhelper.game.DreamMode;
 import io.github.leo3418.hbwhelper.gui.HudGui;
 import net.minecraft.client.Minecraft;
@@ -36,11 +34,8 @@ import net.neoforged.neoforge.common.ModConfigSpec.EnumValue;
 import net.neoforged.neoforge.common.ModConfigSpec.IntValue;
 import org.apache.commons.lang3.tuple.Pair;
 
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Objects;
 
-import static io.github.leo3418.hbwhelper.HbwHelper.MOD_ID;
 
 /**
  * Configuration manager of this mod, which reads from and writes to this mod's

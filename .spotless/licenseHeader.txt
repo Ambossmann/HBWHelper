@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024 Ambossmann <https://github.com/Ambossmann>
+ * Copyright (C) $YEAR Ambossmann <https://github.com/Ambossmann>
  *
  * This file is part of Hypixel Bed Wars Helper - Sleepover Edition (HBW Helper SE).
  *
@@ -22,24 +22,3 @@
  * <http://www.gnu.org/licenses/> and
  * <https://github.com/Ambossmann/HBWHelper>.
  */
-package io.github.leo3418.hbwhelper.neoforge;
-
-import io.github.leo3418.hbwhelper.ConfigManager;
-import io.github.leo3418.hbwhelper.HbwHelper;
-import net.neoforged.bus.api.IEventBus;
-import net.neoforged.fml.ModLoadingContext;
-import net.neoforged.fml.common.Mod;
-import net.neoforged.fml.config.ModConfig;
-import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
-@Mod(HbwHelper.MOD_ID)
-public final class HbwHelperNeoForge {
-
-    public HbwHelperNeoForge(IEventBus modEventBus) {
-        ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, ConfigManager.getSpec());
-        modEventBus.addListener(this::clientSetup);
-    }
-
-    private void clientSetup(FMLClientSetupEvent event) {
-        HbwHelper.init();
-    }
-}

@@ -1,6 +1,6 @@
-# Hypixel Bed Wars Helper
+# Hypixel Bed Wars Helper - Sleepover Edition
 
-Hypixel Bed Wars Helper (HBW Helper) is a Minecraft Forge mod which shows you
+Hypixel Bed Wars Helper - Sleepover Edition (HBW Helper SE) is a Minecraft mod which shows you
 information you care about in a Hypixel Bed Wars game at a glance.  
 
 ## Features

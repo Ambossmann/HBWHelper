@@ -1,6 +1,7 @@
 plugins {
     id "architectury-plugin" version "3.4-SNAPSHOT"
     id "dev.architectury.loom" version "1.5-SNAPSHOT" apply false
+    id "com.diffplug.spotless" version "6.25.0"
 }
 
 architectury {
@@ -28,6 +29,8 @@ allprojects {
     apply plugin: "java"
     apply plugin: "architectury-plugin"
     apply plugin: "maven-publish"
+
+    apply plugin: "com.diffplug.spotless"
 
     base {
         archivesName = rootProject.mod_id
@@ -114,5 +117,28 @@ allprojects {
 
     java {
         withSourcesJar()
+    }
+
+    spotless {
+        ratchetFrom 'origin/dev'
+
+        format 'misc', {
+            target '*.gradle', '.gitattributes', '.gitignore'
+
+            trimTrailingWhitespace()
+            indentWithSpaces()
+            endWithNewline()
+        }
+        java {
+            googleJavaFormat()
+            formatAnnotations()
+            removeUnusedImports()
+
+            licenseHeaderFile("${rootProject.projectDir}/.spotless/licenseHeaderLegacy.txt")
+                    .named("license-header-legacy")
+                    .onlyIfContentMatches("Copyright \\(C\\) \\d{4}(?:-\\d{4})? Leo3418 <https://github\\.com/Leo3418>")
+            licenseHeaderFile("${rootProject.projectDir}/.spotless/licenseHeader.txt")
+                    .onlyIfContentMatches("Copyright \\(C\\) \\d{4}(?:-\\d{4})? Ambossmann <https:\\/\\/github\\.com\\/Ambossmann>\\n \\*\\n")
+        }
     }
 }
