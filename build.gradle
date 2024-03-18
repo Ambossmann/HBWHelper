@@ -23,6 +23,10 @@ subprojects {
             parchment("org.parchmentmc.data:parchment-${rootProject.parchment_minecraft_version}:${rootProject.parchment_version}")
         }
     }
+
+    remapJar {
+        archiveClassifier.set(project.name)
+    }
 }
 
 allprojects {
@@ -33,7 +37,7 @@ allprojects {
     apply plugin: "com.diffplug.spotless"
 
     base {
-        archivesName = rootProject.mod_id
+        archivesName = rootProject.mod_id + "-" + rootProject.minecraft_version
     }
 
     version = rootProject.mod_version
