@@ -26,10 +26,7 @@
 package io.github.leo3418.hbwhelper;
 
 import dev.architectury.event.CompoundEventResult;
-import dev.architectury.event.events.client.ClientChatEvent;
-import dev.architectury.event.events.client.ClientGuiEvent;
-import dev.architectury.event.events.client.ClientPlayerEvent;
-import dev.architectury.event.events.client.ClientTickEvent;
+import dev.architectury.event.events.client.*;
 import dev.architectury.hooks.client.screen.ScreenAccess;
 import io.github.leo3418.hbwhelper.event.GameEvent;
 import io.github.leo3418.hbwhelper.game.GameManager;
@@ -39,6 +36,7 @@ import io.github.leo3418.hbwhelper.gui.HudGui;
 import io.github.leo3418.hbwhelper.util.GameDetector;
 import io.github.leo3418.hbwhelper.util.HypixelDetector;
 import io.github.leo3418.hbwhelper.util.InProgressGameDetector;
+import java.util.Objects;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
@@ -46,89 +44,71 @@ import net.minecraft.network.chat.ChatType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 
-import java.util.Objects;
-
 /**
- * Event manager of this mod, which responds to events fired on
- * Minecraft Forge's event bus and this mod's {@link EventManager#EVENT_BUS
- * proprietary event bus}, and also holds that proprietary event bus.
- * <p>
- * This class is the place where most core behaviors of this mod is defined. It
- * decides what actions to take upon each kind of event, whereas other classes
- * define the actions' details and complete the actions.
- * <p>
- * This is a Singleton class. Only one instance of this class may be created
- * per runtime.
+ * Event manager of this mod, which responds to events fired on Minecraft Forge's event bus and this
+ * mod's {@link EventManager#EVENT_BUS proprietary event bus}, and also holds that proprietary event
+ * bus.
+ *
+ * <p>This class is the place where most core behaviors of this mod is defined. It decides what
+ * actions to take upon each kind of event, whereas other classes define the actions' details and
+ * complete the actions.
+ *
+ * <p>This is a Singleton class. Only one instance of this class may be created per runtime.
  *
  * @author Leo
  */
 public class EventManager {
 
     /**
-     * {@link Component} object storing prompt being shown when client
-     * rejoins a Bed Wars game it was in before after Minecraft restarts
+     * {@link Component} object storing prompt being shown when client rejoins a Bed Wars game it was
+     * in before after Minecraft restarts
      */
     private static final Component CLIENT_RESTART_PROMPT =
-            Component.translatable("hbwhelper.messages.clientRestart",
-                    HbwHelper.NAME);
+            Component.translatable("hbwhelper.messages.clientRestart", HbwHelper.NAME);
 
     /**
-     * {@link Component} object storing prompt being shown when client
-     * rejoins a Bed Wars game it was in before, but Minecraft has not been
-     * restarted
+     * {@link Component} object storing prompt being shown when client rejoins a Bed Wars game it was
+     * in before, but Minecraft has not been restarted
      */
     private static final Component CLIENT_REJOIN_PROMPT =
-            Component.translatable("hbwhelper.messages.clientRejoin",
-                    HbwHelper.NAME);
+            Component.translatable("hbwhelper.messages.clientRejoin", HbwHelper.NAME);
 
-    /**
-     * The only instance of this class
-     */
+    /** The only instance of this class */
     private static final EventManager INSTANCE = new EventManager();
 
-    /**
-     * The {@link HypixelDetector} instance
-     */
+    /** The {@link HypixelDetector} instance */
     private final HypixelDetector hypixelDetector;
 
-    /**
-     * The {@link GameDetector} instance
-     */
+    /** The {@link GameDetector} instance */
     private final GameDetector gameDetector;
 
-    /**
-     * The {@link InProgressGameDetector} instance
-     */
+    /** The {@link InProgressGameDetector} instance */
     private final InProgressGameDetector ipGameDetector;
 
-    /**
-     * The {@link GameTypeDetector} instance
-     */
+    /** The {@link GameTypeDetector} instance */
     private final GameTypeDetector gameTypeDetector;
 
-    /**
-     * The {@link HudGui} instance
-     */
+    /** The {@link HudGui} instance */
     private final HudGui hudGui;
 
     /**
-     * Whether the current {@link GameManager} instance returned by
-     * {@link GameManager#getInstance()} should be cleared when client switches
-     * to the next Bed Wars game
-     * <p>
-     * If this boolean's value is set to {@code true}, it should be changed to
-     * {@code false} when one of the following conditions is satisfied:
+     * Whether the current {@link GameManager} instance returned by {@link GameManager#getInstance()}
+     * should be cleared when client switches to the next Bed Wars game
+     *
+     * <p>If this boolean's value is set to {@code true}, it should be changed to {@code false} when
+     * one of the following conditions is satisfied:
+     *
      * <ul>
-     * <li>Client leaves the current Bed Wars game and joins the next game</li>
-     * <li>Client was being transferred to another in-progress Bed Wars game,
-     * but the teleport is cancelled for whatever reason</li>
+     *   <li>Client leaves the current Bed Wars game and joins the next game
+     *   <li>Client was being transferred to another in-progress Bed Wars game, but the teleport is
+     *       cancelled for whatever reason
      * </ul>
      */
     private boolean shouldClearGMInstance;
 
     /**
-     * Implementation of Singleton design pattern, which allows only one
-     * instance of this class to be created.
+     * Implementation of Singleton design pattern, which allows only one instance of this class to be
+     * created.
      */
     private EventManager() {
         hypixelDetector = HypixelDetector.getInstance();
@@ -149,11 +129,14 @@ public class EventManager {
 
     void register() {
         ClientChatEvent.RECEIVED.register(this::onClientChatReceived);
+        ClientSystemMessageEvent.RECEIVED.register(m -> this.onClientChatReceived(null, m));
         ClientTickEvent.CLIENT_POST.register(this::onClientTick);
         ClientGuiEvent.RENDER_HUD.register(this::onRenderGameOverlay);
         ClientGuiEvent.INIT_POST.register(this::onGuiOpen);
-        ClientPlayerEvent.CLIENT_PLAYER_JOIN.register(player -> this.onClientPlayerNetworkEvent(NetworkEventType.LOGGING_IN));
-        ClientPlayerEvent.CLIENT_PLAYER_QUIT.register(player -> this.onClientPlayerNetworkEvent(NetworkEventType.LOGGING_OUT));
+        ClientPlayerEvent.CLIENT_PLAYER_JOIN.register(
+                player -> this.onClientPlayerNetworkEvent(NetworkEventType.LOGGING_IN));
+        ClientPlayerEvent.CLIENT_PLAYER_QUIT.register(
+                player -> this.onClientPlayerNetworkEvent(NetworkEventType.LOGGING_OUT));
         GameEvent.CLIENT_JOIN_IN_PROGRESS_GAME.register(this::onClientJoinIPGame);
         GameEvent.CLIENT_REJOIN_GAME.register(this::onClientRejoinGame);
         GameEvent.CLIENT_LEAVE_GAME.register(this::onClientLeaveGame);
@@ -171,7 +154,8 @@ public class EventManager {
         gameDetector.update(screen);
     }
 
-    public CompoundEventResult<Component> onClientChatReceived(ChatType.Bound type, Component message) {
+    public CompoundEventResult<Component> onClientChatReceived(
+            ChatType.Bound type, Component message) {
         gameDetector.update(message);
         ipGameDetector.detect(message);
         if (gameDetector.isIn() && GameManager.getInstance() != null) {
@@ -207,8 +191,7 @@ public class EventManager {
             GameManager.clearInstance();
             shouldClearGMInstance = false;
         }
-        Player player =
-                Objects.requireNonNull(Minecraft.getInstance().player);
+        Player player = Objects.requireNonNull(Minecraft.getInstance().player);
         if (GameManager.getInstance() == null) {
             // Client is rejoining a Bed Wars game after restart of Minecraft
             player.sendSystemMessage(CLIENT_RESTART_PROMPT);

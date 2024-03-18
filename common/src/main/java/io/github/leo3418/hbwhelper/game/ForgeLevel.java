@@ -26,46 +26,34 @@
 package io.github.leo3418.hbwhelper.game;
 
 /**
- * Enumeration of all resource generation speed levels on the player's base
- * island in Hypixel Bed Wars.
+ * Enumeration of all resource generation speed levels on the player's base island in Hypixel Bed
+ * Wars.
  *
  * @author Leo
  */
 public enum ForgeLevel {
-    /**
-     * The initial resource generation speed level without any upgrade
-     */
+    /** The initial resource generation speed level without any upgrade */
     ORDINARY_FORGE("Not upgraded"),
-    /**
-     * Resource generation speed level with "Iron Forge" upgrade
-     */
+    /** Resource generation speed level with "Iron Forge" upgrade */
     IRON_FORGE("Iron Forge"),
-    /**
-     * Resource generation speed level with "Golden Forge" upgrade
-     */
+    /** Resource generation speed level with "Golden Forge" upgrade */
     GOLDEN_FORGE("Golden Forge"),
-    /**
-     * Resource generation speed level with "Emerald Forge" upgrade
-     */
+    /** Resource generation speed level with "Emerald Forge" upgrade */
     EMERALD_FORGE("Emerald Forge"),
-    /**
-     * Resource generation speed level with "Molten Forge" upgrade
-     */
+    /** Resource generation speed level with "Molten Forge" upgrade */
     MOLTEN_FORGE("Molten Forge");
 
     /**
-     * Part of the prompt shown when the player's team unlocks this level
-     * of resource generation speed
+     * Part of the prompt shown when the player's team unlocks this level of resource generation speed
      */
     final String prompt;
 
     /**
      * Constructs a new constant of resource generation speed levels.
      *
-     * @param name the name of this trap shown in any prompt in Hypixel
-     *         without any formatting code
+     * @param name the name of this trap shown in any prompt in Hypixel without any formatting code
      */
     ForgeLevel(String name) {
-        this.prompt = "\u00A7r\u00A76" + name + "\u00A7r";
+        this.prompt = "§r§6" + name + "§r";
     }
 }

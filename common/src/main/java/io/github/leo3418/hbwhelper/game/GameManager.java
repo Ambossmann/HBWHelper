@@ -27,40 +27,35 @@ package io.github.leo3418.hbwhelper.game;
 
 import io.github.leo3418.hbwhelper.HbwHelper;
 import io.github.leo3418.hbwhelper.util.TextComponents;
+import java.util.*;
 import net.minecraft.client.Minecraft;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.phys.AABB;
-import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.Component;
-
-import java.util.*;
 
 /**
- * Stores information and progress of a Bed Wars game session, and allows other
- * classes to read information such as time until next diamond generation and
- * upgrades the player's team has unlocked.
- * <p>
- * When the client joins a new Bed Wars game, a new {@code GameManager} object
- * should be created for the game. The object can be reused if the client
- * disconnects from the game and rejoins it later unless Minecraft is restarted
- * in the meanwhile.
- * <p>
- * When a player leaves a Bed Wars game and joins another game on Hypixel, they
- * will no longer be able to rejoin the previous game they were playing, so the
- * previous {@code GameManager} object can and <b>should</b> be discarded, and
- * a new object should be created for the new game.
- * <p>
- * This class is designed <b>to be used only when the client is in a Minecraft
- * world</b>. Calling some methods when the client is not in a Minecraft world
- * (e.g. in the main menu) might produce {@link NullPointerException}.
+ * Stores information and progress of a Bed Wars game session, and allows other classes to read
+ * information such as time until next diamond generation and upgrades the player's team has
+ * unlocked.
+ *
+ * <p>When the client joins a new Bed Wars game, a new {@code GameManager} object should be created
+ * for the game. The object can be reused if the client disconnects from the game and rejoins it
+ * later unless Minecraft is restarted in the meanwhile.
+ *
+ * <p>When a player leaves a Bed Wars game and joins another game on Hypixel, they will no longer be
+ * able to rejoin the previous game they were playing, so the previous {@code GameManager} object
+ * can and <b>should</b> be discarded, and a new object should be created for the new game.
+ *
+ * <p>This class is designed <b>to be used only when the client is in a Minecraft world</b>. Calling
+ * some methods when the client is not in a Minecraft world (e.g. in the main menu) might produce
+ * {@link NullPointerException}.
  *
  * @author Leo
  */
 public class GameManager {
-    /**
-     * Maximum number of traps a team can have in the trap queue
-     */
+    /** Maximum number of traps a team can have in the trap queue */
     public static final int MAX_TRAPS = 3;
 
     /*
@@ -68,90 +63,52 @@ public class GameManager {
      * counterpart in older Minecraft client versions.
      */
 
-    /**
-     * Text that only appears in the line showing spawn time above a generator
-     */
-    private static final String GENERATOR_TEXT = "\u00A7eSpawns in \u00A7r\u00A7c";
+    /** Text that only appears in the line showing spawn time above a generator */
+    private static final String GENERATOR_TEXT = "§eSpawns in §r§c";
 
-    /**
-     * Text that only appears in a diamond generator's display name
-     */
-    private static final String DIAMOND_GEN_TEXT = "\u00A7b\u00A7lDiamond\u00A7r";
+    /** Text that only appears in a diamond generator's display name */
+    private static final String DIAMOND_GEN_TEXT = "§b§lDiamond§r";
 
-    /**
-     * Text that only appears in an emerald generator's display name
-     */
-    private static final String EMERALD_GEN_TEXT = "\u00A72\u00A7lEmerald\u00A7r";
+    /** Text that only appears in an emerald generator's display name */
+    private static final String EMERALD_GEN_TEXT = "§2§lEmerald§r";
 
-    /**
-     * Part of the prompt shown when the player's team unlocks "Heal Pool"
-     * upgrade
-     */
-    private static final String HEAL_POOL_PROMPT =
-            "\u00A7r\u00A76Heal Pool\u00A7r";
+    /** Part of the prompt shown when the player's team unlocks "Heal Pool" upgrade */
+    private static final String HEAL_POOL_PROMPT = "§r§6Heal Pool§r";
 
-    /**
-     * Part of the prompt shown when the player's team unlocks "Dragon Buff"
-     * upgrade
-     */
-    private static final String DRAGON_BUFF_PROMPT =
-            "\u00A7r\u00A76Dragon Buff\u00A7r";
+    /** Part of the prompt shown when the player's team unlocks "Dragon Buff" upgrade */
+    private static final String DRAGON_BUFF_PROMPT = "§r§6Dragon Buff§r";
 
-    /**
-     * Part of the prompt shown when the player's team unlocks "DeadShot"
-     * upgrade
-     */
-    private static final String DEADSHOT_PROMPT =
-            "\u00A7r\u00A76DeadShot ";
+    /** Part of the prompt shown when the player's team unlocks "DeadShot" upgrade */
+    private static final String DEADSHOT_PROMPT = "§r§6DeadShot ";
 
-    /**
-     * Reference to the last created instance of this class
-     */
+    /** Reference to the last created instance of this class */
     private static GameManager instance;
 
-    /**
-     * Type of the current Bed Wars game
-     */
+    /** Type of the current Bed Wars game */
     private final GameType gameType;
 
-    /**
-     * Trap queue
-     */
+    /** Trap queue */
     private final Queue<CountedTrap> trapQueue;
 
-    /**
-     * Cache of an unmodifiable copy of the trap queue
-     */
+    /** Cache of an unmodifiable copy of the trap queue */
     private final Collection<CountedTrap> readOnlyTraps;
 
-    /**
-     * Position of the diamond generator being read
-     */
+    /** Position of the diamond generator being read */
     private BlockPos diamondGenPos;
 
-    /**
-     * Position of the emerald generator being read
-     */
+    /** Position of the emerald generator being read */
     private BlockPos emeraldGenPos;
 
-    /**
-     * Level of resource generation speed on the player's base island
-     */
+    /** Level of resource generation speed on the player's base island */
     private ForgeLevel forgeLevel;
 
-    /**
-     * Whether the player's team has unlocked "Heal Pool" upgrade
-     */
+    /** Whether the player's team has unlocked "Heal Pool" upgrade */
     private boolean healPool;
 
-    /**
-     * Whether the player's team has unlocked "Dragon Buff" upgrade
-     */
+    /** Whether the player's team has unlocked "Dragon Buff" upgrade */
     private boolean dragonBuff;
 
-    /**
-     * Level of the "DeadShot" upgrade unlocked by the player's team
-     */
+    /** Level of the "DeadShot" upgrade unlocked by the player's team */
     private int deadShotLevel;
 
     /**
@@ -166,14 +123,12 @@ public class GameManager {
         for (CountedTrap countedTrap : gameType.initialTrapQueue) {
             this.trapQueue.add(countedTrap.getCopy());
         }
-        this.readOnlyTraps =
-                Collections.unmodifiableCollection(trapQueue);
+        this.readOnlyTraps = Collections.unmodifiableCollection(trapQueue);
     }
 
     /**
-     * Creates a new {@code GameManager} instance. This method does not return
-     * the instance created; rather, the new instance should be accessed by
-     * calling the {@link #getInstance()} method.
+     * Creates a new {@code GameManager} instance. This method does not return the instance created;
+     * rather, the new instance should be accessed by calling the {@link #getInstance()} method.
      *
      * @param gameType the type of the current Bed Wars game
      */
@@ -182,43 +137,41 @@ public class GameManager {
     }
 
     /**
-     * Returns a reference to the last created instance of this class, or
-     * {@code null} if an instance has never been created.
-     * <p>
-     * The returned reference <b>should not</b> be stored into a variable. The
-     * reference is only useful for the current game the client is playing. When
-     * the client joins another game, this method will return reference to
-     * another instance of this class, and the previous instance should be
-     * discarded and recycled by the garbage collector. If a reference to the
-     * previous instance were still stored in a variable, it would prevent the
-     * garbage collection on the instance, causing memory leak.
+     * Returns a reference to the last created instance of this class, or {@code null} if an instance
+     * has never been created.
      *
-     * @return a reference to the last created instance of this class, or
-     *         {@code null} if an instance has never been created
+     * <p>The returned reference <b>should not</b> be stored into a variable. The reference is only
+     * useful for the current game the client is playing. When the client joins another game, this
+     * method will return reference to another instance of this class, and the previous instance
+     * should be discarded and recycled by the garbage collector. If a reference to the previous
+     * instance were still stored in a variable, it would prevent the garbage collection on the
+     * instance, causing memory leak.
+     *
+     * @return a reference to the last created instance of this class, or {@code null} if an instance
+     *     has never been created
      */
     public static GameManager getInstance() {
         return instance;
     }
 
     /**
-     * Clears the reference to the last created instance of this class, or does
-     * nothing when an instance has never been created.
-     * <p>
-     * This method is useful when you wish to recover the state of this program
-     * to the original state where no instance of this class has been created,
-     * and any of your program's behavior relies on whether the
-     * {@link #getInstance()} method returns {@code null}.
+     * Clears the reference to the last created instance of this class, or does nothing when an
+     * instance has never been created.
+     *
+     * <p>This method is useful when you wish to recover the state of this program to the original
+     * state where no instance of this class has been created, and any of your program's behavior
+     * relies on whether the {@link #getInstance()} method returns {@code null}.
      */
     public static void clearInstance() {
         instance = null;
     }
 
     /**
-     * Returns spawn time of next diamond, or {@code -1} if there is no diamond
-     * generator that can be read.
+     * Returns spawn time of next diamond, or {@code -1} if there is no diamond generator that can be
+     * read.
      *
-     * @return spawn time of next diamond, or {@code -1} if there is no diamond
-     *         generator that can be read
+     * @return spawn time of next diamond, or {@code -1} if there is no diamond generator that can be
+     *     read
      */
     public int getNextDiamond() {
         int time;
@@ -236,11 +189,11 @@ public class GameManager {
     }
 
     /**
-     * Returns spawn time of next emerald, or {@code -1} if there is no emerald
-     * generator that can be read.
+     * Returns spawn time of next emerald, or {@code -1} if there is no emerald generator that can be
+     * read.
      *
-     * @return spawn time of next emerald, or {@code -1} if there is no emerald
-     *         generator that can be read
+     * @return spawn time of next emerald, or {@code -1} if there is no emerald generator that can be
+     *     read
      */
     public int getNextEmerald() {
         int time;
@@ -267,31 +220,26 @@ public class GameManager {
     }
 
     /**
-     * Returns whether or not the player's team has unlocked "Heal Pool"
-     * upgrade.
+     * Returns whether or not the player's team has unlocked "Heal Pool" upgrade.
      *
-     * @return whether or not the player's team has unlocked "Heal Pool"
-     *         upgrade
+     * @return whether or not the player's team has unlocked "Heal Pool" upgrade
      */
     public boolean hasHealPool() {
         return healPool;
     }
 
     /**
-     * Returns whether or not the player's team has unlocked "Dragon Buff"
-     * upgrade.
+     * Returns whether or not the player's team has unlocked "Dragon Buff" upgrade.
      *
-     * @return whether or not the player's team has unlocked "Dragon Buff"
-     *         upgrade
+     * @return whether or not the player's team has unlocked "Dragon Buff" upgrade
      */
     public boolean hasDragonBuff() {
         return dragonBuff;
     }
 
     /**
-     * Returns level of the "DeadShot" upgrade unlocked by the player's team.
-     * If the upgrade has not been unlocked at any level yet, then {@code 0} is
-     * returned.
+     * Returns level of the "DeadShot" upgrade unlocked by the player's team. If the upgrade has not
+     * been unlocked at any level yet, then {@code 0} is returned.
      *
      * @return level of the "DeadShot" upgrade unlocked by the player's team
      */
@@ -309,11 +257,10 @@ public class GameManager {
     }
 
     /**
-     * Updates upgrades the player's team has unlocked by analyzing chat
-     * message client receives.
-     * <p>
-     * This method should be called when the client is in Bed Wars, and a
-     * {@link ClientChatReceivedEvent} is fired.
+     * Updates upgrades the player's team has unlocked by analyzing chat message client receives.
+     *
+     * <p>This method should be called when the client is in Bed Wars, and a {@link
+     * ClientChatReceivedEvent} is fired.
      *
      * @param event the event fired when client receives a chat message
      */
@@ -328,8 +275,7 @@ public class GameManager {
             HbwHelper.LOGGER.info("Dragon Buff enabled");
         } else if (formattedMessage.contains(DEADSHOT_PROMPT)) {
             // Parses the message to get the upgrade's level
-            int levelStart = formattedMessage.indexOf(DEADSHOT_PROMPT) +
-                    DEADSHOT_PROMPT.length();
+            int levelStart = formattedMessage.indexOf(DEADSHOT_PROMPT) + DEADSHOT_PROMPT.length();
             int levelEnd = formattedMessage.indexOf("\u00A7r", levelStart);
             String level = formattedMessage.substring(levelStart, levelEnd);
             switch (level) {
@@ -400,23 +346,19 @@ public class GameManager {
     }
 
     /**
-     * Returns position of a generator (an armor stand) whose display name
-     * contains a specified string, or {@code null} if such armor stand cannot
-     * be found.
+     * Returns position of a generator (an armor stand) whose display name contains a specified
+     * string, or {@code null} if such armor stand cannot be found.
      *
      * @param generatorText the text that would appear above the generator
-     * @return position of a generator (an armor stand) whose display name
-     *         contains a specified string, or {@code null} if such armor stand
-     *         cannot be found
+     * @return position of a generator (an armor stand) whose display name contains a specified
+     *     string, or {@code null} if such armor stand cannot be found
      */
     private BlockPos findGenerator(String generatorText) {
         Iterable<Entity> entities =
-                Objects.requireNonNull(Minecraft.getInstance().level)
-                        .entitiesForRendering();
+                Objects.requireNonNull(Minecraft.getInstance().level).entitiesForRendering();
         for (Entity entity : entities) {
             if (entity instanceof ArmorStand) {
-                String name = TextComponents.toFormattedText(
-                        entity.getDisplayName());
+                String name = TextComponents.toFormattedText(entity.getDisplayName());
                 if (name.contains(generatorText)) {
                     return entity.blockPosition();
                 }
@@ -426,25 +368,22 @@ public class GameManager {
     }
 
     /**
-     * Returns spawn time of the generator at given position, or {@code -1} if
-     * a generator cannot be found or read at that position.
+     * Returns spawn time of the generator at given position, or {@code -1} if a generator cannot be
+     * found or read at that position.
      *
      * @param generatorPos the position of the generator
-     * @return spawn time of the generator at given position, or {@code -1} if
-     *         a generator cannot be found or read at that position
+     * @return spawn time of the generator at given position, or {@code -1} if a generator cannot be
+     *     found or read at that position
      */
     private int getSpawnTime(BlockPos generatorPos) {
         Iterable<ArmorStand> genEntities =
                 Objects.requireNonNull(Minecraft.getInstance().level)
-                        .getEntitiesOfClass(ArmorStand.class,
-                                new AABB(generatorPos));
+                        .getEntitiesOfClass(ArmorStand.class, new AABB(generatorPos));
         for (ArmorStand genEntity : genEntities) {
             Component floatTextComponent = genEntity.getDisplayName();
-            String formattedText =
-                    TextComponents.toFormattedText(floatTextComponent);
+            String formattedText = TextComponents.toFormattedText(floatTextComponent);
             if (formattedText.contains(GENERATOR_TEXT)) {
-                return Integer.parseInt(floatTextComponent.getString()
-                        .replaceAll("[^0-9]", ""));
+                return Integer.parseInt(floatTextComponent.getString().replaceAll("[^0-9]", ""));
             }
         }
         return -1;

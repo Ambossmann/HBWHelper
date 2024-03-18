@@ -25,77 +25,65 @@
  */
 package io.github.leo3418.hbwhelper.util;
 
-import net.minecraft.network.chat.TextColor;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.Style;
-import net.minecraft.ChatFormatting;
-
-import java.util.*;
-import java.util.stream.Collectors;
-
 import static java.util.AbstractMap.SimpleImmutableEntry;
 
+import java.util.*;
 import java.util.AbstractMap.SimpleImmutableEntry;
+import java.util.stream.Collectors;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.TextColor;
 
 /**
- * Provides methods that operate on {@linkplain ITextComponent text component
- * objects}.
+ * Provides methods that operate on {@linkplain ITextComponent text component objects}.
  *
  * @author Leo
  */
 public class TextComponents {
     /**
-     * An immutable map that associates {@linkplain Color#getValue()} color
-     * integer codes} with format control strings with the section sign
-     * ({@code §})
+     * An immutable map that associates {@linkplain Color#getValue()} color integer codes} with format
+     * control strings with the section sign ({@code §})
      */
     private static final Map<Integer, String> COLOR_INT_TO_CTRL_STR_MAP =
-            Collections.unmodifiableMap(Arrays.stream(ChatFormatting.values())
-                    .filter(ChatFormatting::isColor)
-                    .map(textFormatting -> new SimpleImmutableEntry<>(
-                            textFormatting.getColor(),
-                            textFormatting.toString()
-                    ))
-                    .collect(Collectors.toMap(
-                            Map.Entry::getKey, Map.Entry::getValue
-                    ))
-            );
+            Collections.unmodifiableMap(
+                    Arrays.stream(ChatFormatting.values())
+                            .filter(ChatFormatting::isColor)
+                            .map(
+                                    textFormatting ->
+                                            new SimpleImmutableEntry<>(
+                                                    textFormatting.getColor(), textFormatting.toString()))
+                            .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)));
+
+    /** Prevents instantiation of this class. */
+    private TextComponents() {}
 
     /**
-     * Prevents instantiation of this class.
-     */
-    private TextComponents() {
-    }
-
-    /**
-     * Returns the formatted text converted from an {@link ITextComponent}
-     * object. The formatted text will end with a reset formatting code
-     * ({@code §r}).
+     * Returns the formatted text converted from an {@link ITextComponent} object. The formatted text
+     * will end with a reset formatting code ({@code §r}).
      *
      * @param textComponent the text component
      * @return the formatted text generated from the text component
      * @throws NullPointerException if {@code textComponent == null}
-     * @apiNote This method is provided mainly to deal with the removal of
-     *         the {@code getFormattedText()} method in {@code ITextComponent}
-     *         in Minecraft 1.16.
+     * @apiNote This method is provided mainly to deal with the removal of the {@code
+     *     getFormattedText()} method in {@code ITextComponent} in Minecraft 1.16.
      */
     public static String toFormattedText(Component textComponent) {
         Objects.requireNonNull(textComponent, "textComponent");
         StringBuilder resultBuilder = new StringBuilder();
-        String text = textComponent.getString();
-        if (!text.isEmpty()) {
-            resultBuilder.append(formattingCodeOf(textComponent.getStyle()))
-                    .append(text)
-                    .append("\u00A7r");
+        List<Component> siblings = textComponent.getSiblings();
+        if (siblings.isEmpty()) {
+            String text = textComponent.getString();
+            if (!text.isEmpty()) {
+                resultBuilder.append(formattingCodeOf(textComponent.getStyle())).append(text).append("§r");
+            }
         }
-        textComponent.getSiblings().forEach(component ->
-                resultBuilder.append(toFormattedText(component)));
+        siblings.forEach(component -> resultBuilder.append(toFormattedText(component)));
         return resultBuilder.toString();
     }
 
     /**
-     * Returns the formatting code that can generate the specified
-     * {@linkplain Style style}.
+     * Returns the formatting code that can generate the specified {@linkplain Style style}.
      *
      * @param style the style whose corresponding formatting code is queried
      * @return the formatting code for the specified style
@@ -107,28 +95,22 @@ public class TextComponents {
         TextColor color = style.getColor();
         if (color != null) {
             int colorCode = color.getValue();
-            formattingCodeBuilder.append(
-                    COLOR_INT_TO_CTRL_STR_MAP.getOrDefault(colorCode, ""));
+            formattingCodeBuilder.append(COLOR_INT_TO_CTRL_STR_MAP.getOrDefault(colorCode, ""));
         }
         if (style.isObfuscated()) {
-            formattingCodeBuilder.append(
-                    ChatFormatting.OBFUSCATED.toString());
+            formattingCodeBuilder.append(ChatFormatting.OBFUSCATED.toString());
         }
         if (style.isBold()) {
-            formattingCodeBuilder.append(
-                    ChatFormatting.BOLD.toString());
+            formattingCodeBuilder.append(ChatFormatting.BOLD.toString());
         }
         if (style.isStrikethrough()) {
-            formattingCodeBuilder.append(
-                    ChatFormatting.STRIKETHROUGH.toString());
+            formattingCodeBuilder.append(ChatFormatting.STRIKETHROUGH.toString());
         }
         if (style.isUnderlined()) {
-            formattingCodeBuilder.append(
-                    ChatFormatting.UNDERLINE.toString());
+            formattingCodeBuilder.append(ChatFormatting.UNDERLINE.toString());
         }
         if (style.isItalic()) {
-            formattingCodeBuilder.append(
-                    ChatFormatting.ITALIC.toString());
+            formattingCodeBuilder.append(ChatFormatting.ITALIC.toString());
         }
         return formattingCodeBuilder.toString();
     }

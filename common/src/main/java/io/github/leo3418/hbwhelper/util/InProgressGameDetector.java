@@ -30,59 +30,47 @@ import io.github.leo3418.hbwhelper.event.GameEvent;
 import net.minecraft.network.chat.Component;
 
 /**
- * Detects if client is joining an in-progress Hypixel Bed Wars game and if
- * joining is cancelled because of any reason.
- * <p>
- * Implementation of this class was fostered by Hypixel's introduction of the
- * Bed Wars Castle mode, in which a player might be directed to a game that has
- * already started after they choose to join a game.
- * <p>
- * This is a Singleton class. Only one instance of this class may be created
- * per runtime.
+ * Detects if client is joining an in-progress Hypixel Bed Wars game and if joining is cancelled
+ * because of any reason.
+ *
+ * <p>Implementation of this class was fostered by Hypixel's introduction of the Bed Wars Castle
+ * mode, in which a player might be directed to a game that has already started after they choose to
+ * join a game.
+ *
+ * <p>This is a Singleton class. Only one instance of this class may be created per runtime.
  *
  * @author Leo
  */
 public class InProgressGameDetector {
-    /**
-     * Prompt client received in chat when it joins an in-progress game for the
-     * first time
-     */
+    /** Prompt client received in chat when it joins an in-progress game for the first time */
     private static final String IN_PROGRESS_GAME_JOIN_TEXT =
-            "\u00A7aFound an in-progress Bed Wars game! Teleporting you to ";
+            "§aFound an in-progress Bed Wars game! Teleporting you to ";
 
     /**
-     * Prompt client received in chat when Hypixel attempts to put the player
-     * into the server they are already in
+     * Prompt client received in chat when Hypixel attempts to put the player into the server they are
+     * already in
      */
-    private static final String ALREADY_CONNECTED_TEXT =
-            "\u00A7cYou are already connected to this server";
+    private static final String ALREADY_CONNECTED_TEXT = "§cYou are already connected to this server";
 
     /**
-     * Prompt client received in chat when it joins an in-progress game that
-     * no longer accepts new players anymore
+     * Prompt client received in chat when it joins an in-progress game that no longer accepts new
+     * players anymore
      */
     private static final String GAME_ALREADY_STARTED_TEXT =
-            "\u00A7cThis game has already started! Please try again!";
+            "§cThis game has already started! Please try again!";
 
-    /**
-     * The only instance of this class
-     */
-    private static final InProgressGameDetector INSTANCE =
-            new InProgressGameDetector();
+    /** The only instance of this class */
+    private static final InProgressGameDetector INSTANCE = new InProgressGameDetector();
 
-    /**
-     * The {@link HypixelDetector} instance
-     */
+    /** The {@link HypixelDetector} instance */
     private final HypixelDetector hypixelDetector;
 
-    /**
-     * The {@link GameDetector} instance
-     */
+    /** The {@link GameDetector} instance */
     private final GameDetector gameDetector;
 
     /**
-     * Implementation of Singleton design pattern, which allows only one
-     * instance of this class to be created.
+     * Implementation of Singleton design pattern, which allows only one instance of this class to be
+     * created.
      */
     private InProgressGameDetector() {
         hypixelDetector = HypixelDetector.getInstance();
@@ -99,22 +87,19 @@ public class InProgressGameDetector {
     }
 
     /**
-     * Detects if client is joining an in-progress Hypixel Bed Wars game or if
-     * joining is cancelled because of any reason by analyzing chat message
-     * client receives, and fires corresponding events.
-     * <p>
-     * If client is joining an in-progress game it has never connected before,
-     * fires a {@link GameEvent} on this mod's
-     * {@link EventManager#EVENT_BUS proprietary event bus}.
-     * <p>
-     * If a game join has been initiated but is cancelled, either because client
-     * has already connected to the server it is joining, or the game on the
-     * server it is joining has already started, <b>and</b> client is in a Bed
-     * Wars game, fires a {@link TeleportCancelledEvent} on this mod's
-     * {@link EventManager#EVENT_BUS proprietary event bus}.
-     * <p>
-     * This method should be called whenever a {@link ClientChatReceivedEvent}
-     * is fired.
+     * Detects if client is joining an in-progress Hypixel Bed Wars game or if joining is cancelled
+     * because of any reason by analyzing chat message client receives, and fires corresponding
+     * events.
+     *
+     * <p>If client is joining an in-progress game it has never connected before, fires a {@link
+     * GameEvent} on this mod's {@link EventManager#EVENT_BUS proprietary event bus}.
+     *
+     * <p>If a game join has been initiated but is cancelled, either because client has already
+     * connected to the server it is joining, or the game on the server it is joining has already
+     * started, <b>and</b> client is in a Bed Wars game, fires a {@link TeleportCancelledEvent} on
+     * this mod's {@link EventManager#EVENT_BUS proprietary event bus}.
+     *
+     * <p>This method should be called whenever a {@link ClientChatReceivedEvent} is fired.
      *
      * @param event the event fired when client receives a chat message
      */
@@ -125,7 +110,7 @@ public class InProgressGameDetector {
                 GameEvent.CLIENT_JOIN_IN_PROGRESS_GAME.invoker().join();
             } else if (gameDetector.isIn()
                     && (formattedMessage.contains(ALREADY_CONNECTED_TEXT)
-                    || formattedMessage.contains(GAME_ALREADY_STARTED_TEXT))) {
+                            || formattedMessage.contains(GAME_ALREADY_STARTED_TEXT))) {
                 /*
                 Client can also receive these messages when not in Bed Wars,
                 but we only care about them when client is in Bed Wars
