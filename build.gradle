@@ -120,7 +120,7 @@ allprojects {
     }
 
     spotless {
-        ratchetFrom 'origin/dev'
+        ratchetFrom 'd7fc323b817eb0cadd83556a2d6e0fb943c27946'
 
         format 'misc', {
             target '*.gradle', '.gitattributes', '.gitignore'
@@ -133,6 +133,9 @@ allprojects {
             googleJavaFormat()
             formatAnnotations()
             removeUnusedImports()
+
+            indentWithTabs(2)
+            indentWithSpaces(4)
 
             licenseHeaderFile("${rootProject.projectDir}/.spotless/licenseHeaderLegacy.txt")
                     .named("license-header-legacy")
