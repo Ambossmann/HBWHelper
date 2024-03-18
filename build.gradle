@@ -89,20 +89,21 @@ allprojects {
 
         tasks.withType(ProcessResources).configureEach {
             var replaceProperties = [
-                    minecraft_version      : rootProject.minecraft_version,
-                    minecraft_version_range: rootProject.minecraft_version_range,
-                    neo_version            : rootProject.neo_version,
-                    neo_version_range      : rootProject.neo_version_range,
-                    loader_version_range   : rootProject.loader_version_range,
-                    mod_id                 : rootProject.mod_id,
-                    mod_name               : rootProject.mod_name,
-                    mod_license            : rootProject.mod_license,
-                    mod_version            : rootProject.mod_version,
-                    mod_url                : rootProject.mod_url,
-                    mod_credits            : rootProject.mod_credits,
-                    mod_authors            : rootProject.mod_authors,
-                    mod_description        : rootProject.mod_description,
-                    architectury_version   : rootProject.architectury_version,
+                    minecraft_version         : rootProject.minecraft_version,
+                    minecraft_version_range   : rootProject.minecraft_version_range,
+                    neo_version               : rootProject.neo_version,
+                    neo_version_range         : rootProject.neo_version_range,
+                    loader_version_range      : rootProject.loader_version_range,
+                    mod_id                    : rootProject.mod_id,
+                    mod_name                  : rootProject.mod_name,
+                    mod_license               : rootProject.mod_license,
+                    mod_version               : rootProject.mod_version,
+                    mod_url                   : rootProject.mod_url,
+                    mod_credits               : rootProject.mod_credits,
+                    mod_authors               : rootProject.mod_authors,
+                    mod_description           : rootProject.mod_description,
+                    architectury_version      : rootProject.architectury_version,
+                    forgeconfigapiport_version: rootProject.forgeconfigapiport_version,
             ]
             inputs.properties replaceProperties
 
