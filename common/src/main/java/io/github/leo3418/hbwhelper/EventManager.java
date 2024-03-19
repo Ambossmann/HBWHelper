@@ -36,6 +36,7 @@ import io.github.leo3418.hbwhelper.gui.HudGui;
 import io.github.leo3418.hbwhelper.util.GameDetector;
 import io.github.leo3418.hbwhelper.util.HypixelDetector;
 import io.github.leo3418.hbwhelper.util.InProgressGameDetector;
+import io.github.leo3418.hbwhelper.util.TextComponents;
 import java.util.Objects;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -156,6 +157,9 @@ public class EventManager {
 
     public CompoundEventResult<Component> onClientChatReceived(
             ChatType.Bound type, Component message) {
+        if (ConfigManager.getInstance().debugChatMessages()) {
+            HbwHelper.LOGGER.info(TextComponents.toFormattedText(message));
+        }
         gameDetector.update(message);
         ipGameDetector.detect(message);
         if (gameDetector.isIn() && GameManager.getInstance() != null) {

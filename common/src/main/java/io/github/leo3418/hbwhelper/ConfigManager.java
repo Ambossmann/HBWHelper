@@ -27,6 +27,7 @@ package io.github.leo3418.hbwhelper;
 
 import io.github.leo3418.hbwhelper.game.DreamMode;
 import io.github.leo3418.hbwhelper.gui.HudGui;
+import java.util.Objects;
 import net.minecraft.client.Minecraft;
 import net.neoforged.neoforge.common.ModConfigSpec;
 import net.neoforged.neoforge.common.ModConfigSpec.BooleanValue;
@@ -34,44 +35,34 @@ import net.neoforged.neoforge.common.ModConfigSpec.EnumValue;
 import net.neoforged.neoforge.common.ModConfigSpec.IntValue;
 import org.apache.commons.lang3.tuple.Pair;
 
-import java.util.Objects;
-
-
 /**
- * Configuration manager of this mod, which reads from and writes to this mod's
- * configuration file.
- * <p>
- * This is a Singleton class. Only one instance of this class may be created
- * per runtime.
- * <p>
- * The methods that change this mod's configuration do not automatically write
- * those changes to the configuration file on disk. Instead, they only update
- * the configuration in memory. To write any changes, use the {@link #save()}
- * method.
+ * Configuration manager of this mod, which reads from and writes to this mod's configuration file.
+ *
+ * <p>This is a Singleton class. Only one instance of this class may be created per runtime.
+ *
+ * <p>The methods that change this mod's configuration do not automatically write those changes to
+ * the configuration file on disk. Instead, they only update the configuration in memory. To write
+ * any changes, use the {@link #save()} method.
  *
  * @author Leo
  */
 public class ConfigManager {
     /**
-     * Default width from the left edge of the Minecraft window to the left
-     * edge of {@link HudGui HudGui}
+     * Default width from the left edge of the Minecraft window to the left edge of {@link HudGui
+     * HudGui}
      */
     private static final int DEFAULT_HUD_X = 2;
 
     /**
-     * Default height from the top edge of the Minecraft window to the top edge
-     * of {@link HudGui HudGui}
+     * Default height from the top edge of the Minecraft window to the top edge of {@link HudGui
+     * HudGui}
      */
     private static final int DEFAULT_HUD_Y = 2;
 
-    /**
-     * The only instance of this class
-     */
+    /** The only instance of this class */
     private static final ConfigManager INSTANCE;
 
-    /**
-     * The {@link ModConfigSpec} instance for this mod's configuration
-     */
+    /** The {@link ModConfigSpec} instance for this mod's configuration */
     private static final ModConfigSpec SPEC;
 
     static {
@@ -81,86 +72,83 @@ public class ConfigManager {
         SPEC = specPair.getRight();
     }
 
-    /**
-     * Whether diamond and emerald generation times should be shown on
-     * {@link HudGui}
-     */
+    /** Whether diamond and emerald generation times should be shown on {@link HudGui} */
     private final BooleanValue showGenerationTimes;
 
-    /**
-     * Whether team upgrades should be shown on {@link HudGui}
-     */
+    /** Whether team upgrades should be shown on {@link HudGui} */
     private final BooleanValue showTeamUpgrades;
 
-    /**
-     * Whether armor information should be shown on {@link HudGui}
-     */
+    /** Whether armor information should be shown on {@link HudGui} */
     private final BooleanValue showArmorInfo;
 
-    /**
-     * Whether effects information should be shown on {@link HudGui}
-     */
+    /** Whether effects information should be shown on {@link HudGui} */
     private final BooleanValue showEffectsInfo;
 
-    /**
-     * Whether status effects should always be shown on {@link HudGui}
-     */
+    /** Whether status effects should always be shown on {@link HudGui} */
     private final BooleanValue alwaysShowEffects;
 
-    /**
-     * Width from the left edge of the Minecraft window to the left edge of
-     * {@link HudGui}
-     */
+    /** Width from the left edge of the Minecraft window to the left edge of {@link HudGui} */
     private final IntValue hudX;
 
-    /**
-     * Height from the top edge of the Minecraft window to the top edge of
-     * {@link HudGui}
-     */
+    /** Height from the top edge of the Minecraft window to the top edge of {@link HudGui} */
     private final IntValue hudY;
 
-    /**
-     * The current game for the Dream Mode on Hypixel
-     */
+    /** The current game for the Dream Mode on Hypixel */
     private final EnumValue<DreamMode> currentDreamMode;
 
+    /** */
+    private final BooleanValue debugChatMessages;
+
     /**
-     * Implementation of Singleton design pattern, which allows only one
-     * instance of this class to be created.
+     * Implementation of Singleton design pattern, which allows only one instance of this class to be
+     * created.
      */
     private ConfigManager(ModConfigSpec.Builder configSpecBuilder) {
         // Comments are not added because there was no way to translate
         // descriptions from translate keys here
 
-        showGenerationTimes = configSpecBuilder
-                .translation("hbwhelper.configGui.showGenerationTimes.title")
-                .define("showGenerationTimes", true);
-        showTeamUpgrades = configSpecBuilder
-                .translation("hbwhelper.configGui.showTeamUpgrades.title")
-                .define("showTeamUpgrades", true);
-        showArmorInfo = configSpecBuilder
-                .translation("hbwhelper.configGui.showArmorInfo.title")
-                .define("showArmorInfo", true);
-        showEffectsInfo = configSpecBuilder
-                .translation("hbwhelper.configGui.showEffectsInfo.title")
-                .define("showEffectsInfo", true);
-        alwaysShowEffects = configSpecBuilder
-                .translation("hbwhelper.configGui.alwaysShowEffects.title")
-                .define("alwaysShowEffects", false);
+        showGenerationTimes =
+                configSpecBuilder
+                        .translation("hbwhelper.configGui.showGenerationTimes.title")
+                        .define("showGenerationTimes", true);
+        showTeamUpgrades =
+                configSpecBuilder
+                        .translation("hbwhelper.configGui.showTeamUpgrades.title")
+                        .define("showTeamUpgrades", true);
+        showArmorInfo =
+                configSpecBuilder
+                        .translation("hbwhelper.configGui.showArmorInfo.title")
+                        .define("showArmorInfo", true);
+        showEffectsInfo =
+                configSpecBuilder
+                        .translation("hbwhelper.configGui.showEffectsInfo.title")
+                        .define("showEffectsInfo", true);
+        alwaysShowEffects =
+                configSpecBuilder
+                        .translation("hbwhelper.configGui.alwaysShowEffects.title")
+                        .define("alwaysShowEffects", false);
 
         // The maximum values of HUD-related parameters are determined by the
         // window size and thus can change very often, so we do not set maximum
         // limits here but validate the settings on the run
-        hudX = configSpecBuilder
-                .translation("hbwhelper.configGui.hudX.title")
-                .defineInRange("hudX", DEFAULT_HUD_X, 0, Integer.MAX_VALUE);
-        hudY = configSpecBuilder
-                .translation("hbwhelper.configGui.hudY.title")
-                .defineInRange("hudY", DEFAULT_HUD_Y, 0, Integer.MAX_VALUE);
+        hudX =
+                configSpecBuilder
+                        .translation("hbwhelper.configGui.hudX.title")
+                        .defineInRange("hudX", DEFAULT_HUD_X, 0, Integer.MAX_VALUE);
+        hudY =
+                configSpecBuilder
+                        .translation("hbwhelper.configGui.hudY.title")
+                        .defineInRange("hudY", DEFAULT_HUD_Y, 0, Integer.MAX_VALUE);
 
-        currentDreamMode = configSpecBuilder
-                .translation("hbwhelper.configGui.currentDreamMode.title")
-                .defineEnum("currentDreamMode", DreamMode.UNSELECTED);
+        currentDreamMode =
+                configSpecBuilder
+                        .translation("hbwhelper.configGui.currentDreamMode.title")
+                        .defineEnum("currentDreamMode", DreamMode.UNSELECTED);
+
+        debugChatMessages =
+                configSpecBuilder
+                        .translation("hbwhelper.configGui.debugChatMessages.title")
+                        .define("debugChatMessages", false);
     }
 
     /**
@@ -179,22 +167,22 @@ public class ConfigManager {
     // Validations
 
     /**
-     * Returns the maximum value permitted for the width from the left edge of
-     * the Minecraft window to the left edge of {@link HudGui HudGui}.
+     * Returns the maximum value permitted for the width from the left edge of the Minecraft window to
+     * the left edge of {@link HudGui HudGui}.
      *
-     * @return the maximum value permitted for the width from the left edge of
-     *         the Minecraft window to the left edge of {@code HudGui}
+     * @return the maximum value permitted for the width from the left edge of the Minecraft window to
+     *     the left edge of {@code HudGui}
      */
     public int maxHudX() {
         return Minecraft.getInstance().getWindow().getGuiScaledWidth();
     }
 
     /**
-     * Returns the maximum value permitted for the height from the top edge of
-     * the Minecraft window to the left edge of {@link HudGui HudGui}.
+     * Returns the maximum value permitted for the height from the top edge of the Minecraft window to
+     * the left edge of {@link HudGui HudGui}.
      *
-     * @return the maximum value permitted for the height from the top edge of
-     *         the Minecraft window to the left edge of {@code HudGui}
+     * @return the maximum value permitted for the height from the top edge of the Minecraft window to
+     *     the left edge of {@code HudGui}
      */
     public int maxHudY() {
         return Minecraft.getInstance().getWindow().getGuiScaledHeight();
@@ -203,11 +191,9 @@ public class ConfigManager {
     // Query Operations
 
     /**
-     * Returns whether diamond and emerald generation times should be shown on
-     * {@link HudGui HudGui}.
+     * Returns whether diamond and emerald generation times should be shown on {@link HudGui HudGui}.
      *
-     * @return whether diamond and emerald generation times should be shown on
-     *         {@code HudGui}
+     * @return whether diamond and emerald generation times should be shown on {@code HudGui}
      */
     public boolean showGenerationTimes() {
         return showGenerationTimes.get();
@@ -223,8 +209,7 @@ public class ConfigManager {
     }
 
     /**
-     * Returns whether armor information should be shown on
-     * {@link HudGui HudGui}.
+     * Returns whether armor information should be shown on {@link HudGui HudGui}.
      *
      * @return whether armor information should be shown on {@code HudGui}
      */
@@ -233,8 +218,7 @@ public class ConfigManager {
     }
 
     /**
-     * Returns whether effects information should be shown on
-     * {@link HudGui HudGui}.
+     * Returns whether effects information should be shown on {@link HudGui HudGui}.
      *
      * @return whether effects information should be shown on {@code HudGui}
      */
@@ -243,8 +227,7 @@ public class ConfigManager {
     }
 
     /**
-     * Returns whether status effects should always be shown on
-     * {@link HudGui HudGui}.
+     * Returns whether status effects should always be shown on {@link HudGui HudGui}.
      *
      * @return whether status effects should always be shown on {@code HudGui}
      */
@@ -253,22 +236,20 @@ public class ConfigManager {
     }
 
     /**
-     * Returns width from the left edge of the Minecraft window to the left
-     * edge of {@link HudGui HudGui}.
+     * Returns width from the left edge of the Minecraft window to the left edge of {@link HudGui
+     * HudGui}.
      *
-     * @return width from the left edge of the Minecraft window to the left
-     *         edge of {@code HudGui}.
+     * @return width from the left edge of the Minecraft window to the left edge of {@code HudGui}.
      */
     public int hudX() {
         return hudX.get();
     }
 
     /**
-     * Returns height from the top edge of the Minecraft window to the top
-     * edge of {@link HudGui HudGui}.
+     * Returns height from the top edge of the Minecraft window to the top edge of {@link HudGui
+     * HudGui}.
      *
-     * @return height from the top edge of the Minecraft window to the top
-     *         edge of {@code HudGui}.
+     * @return height from the top edge of the Minecraft window to the top edge of {@code HudGui}.
      */
     public int hudY() {
         return hudY.get();
@@ -283,14 +264,21 @@ public class ConfigManager {
         return currentDreamMode.get();
     }
 
+    /**
+     * Returns if formatted chat messages should be logged.
+     *
+     * @return whether formatted chat messages should be logged
+     */
+    public boolean debugChatMessages() {
+        return debugChatMessages.get();
+    }
+
     // Modification Operations
 
     /**
-     * Changes whether diamond and emerald generation times should be shown on
-     * {@link HudGui HudGui}.
+     * Changes whether diamond and emerald generation times should be shown on {@link HudGui HudGui}.
      *
-     * @param newValue whether diamond and emerald generation times should be
-     *         shown on {@code HudGui}
+     * @param newValue whether diamond and emerald generation times should be shown on {@code HudGui}
      */
     public void changeShowGenerationTimes(boolean newValue) {
         showGenerationTimes.set(newValue);
@@ -306,68 +294,62 @@ public class ConfigManager {
     }
 
     /**
-     * Changes whether armor information should be shown on
-     * {@link HudGui HudGui}.
+     * Changes whether armor information should be shown on {@link HudGui HudGui}.
      *
-     * @param newValue whether armor information should be shown on
-     *         {@code HudGui}
+     * @param newValue whether armor information should be shown on {@code HudGui}
      */
     public void changeShowArmorInfo(boolean newValue) {
         showArmorInfo.set(newValue);
     }
 
     /**
-     * Changes whether effects information should be shown on
-     * {@link HudGui HudGui}.
+     * Changes whether effects information should be shown on {@link HudGui HudGui}.
      *
-     * @param newValue whether effects information should be shown on
-     *         {@code HudGui}
+     * @param newValue whether effects information should be shown on {@code HudGui}
      */
     public void changeShowEffectsInfo(boolean newValue) {
         showEffectsInfo.set(newValue);
     }
 
     /**
-     * Changes whether status effects should always be shown on
-     * {@link HudGui HudGui}.
+     * Changes whether status effects should always be shown on {@link HudGui HudGui}.
      *
-     * @param newValue whether status effects should always be shown on
-     *         {@code HudGui}
+     * @param newValue whether status effects should always be shown on {@code HudGui}
      */
     public void changeAlwaysShowEffects(boolean newValue) {
         alwaysShowEffects.set(newValue);
     }
 
     /**
-     * Changes the width from the left edge of the Minecraft window to the left
-     * edge of {@link HudGui HudGui}.
+     * Changes the width from the left edge of the Minecraft window to the left edge of {@link HudGui
+     * HudGui}.
      *
      * @param newValue the new value for the width
-     * @throws IllegalArgumentException if the new value is out of the permitted
-     *         range (0 to {@link #maxHudX()}, inclusive)
+     * @throws IllegalArgumentException if the new value is out of the permitted range (0 to {@link
+     *     #maxHudX()}, inclusive)
      */
     public void changeHudX(int newValue) {
         int max = maxHudX();
         if (newValue < 0 || newValue > max) {
-            throw new IllegalArgumentException("New value out of range " +
-                    " (0-" + max + "): " + newValue);
+            throw new IllegalArgumentException(
+                    "New value out of range " + " (0-" + max + "): " + newValue);
         }
         hudX.set(newValue);
     }
 
     /**
-     * Changes the height from the left edge of the Minecraft window to the top
-     * edge of {@link HudGui HudGui}.
+     * Changes the height from the left edge of the Minecraft window to the top edge of {@link HudGui
+     * HudGui}.
      *
      * @param newValue the new value for the height
-     * @throws IllegalArgumentException if the new value is out of the permitted
-     *         range (0 to {@link #maxHudY()}, inclusive)
+     * @throws IllegalArgumentException if the new value is out of the permitted range (0 to {@link
+     *     #maxHudY()}, inclusive)
      */
     public void changeHudY(int newValue) {
         int max = maxHudY();
         if (newValue < 0 || newValue > max) {
-            throw new IllegalArgumentException("New value out of range " +
-                    " (0-" + max + "): " + newValue);
+            throw new IllegalArgumentException(
+                    "New value out of range " + " (0-" + max + "): " + newValue);
         }
         hudY.set(newValue);
     }

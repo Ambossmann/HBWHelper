@@ -17,6 +17,8 @@
   "hbwhelper.configGui.showGenerationTimes.description": "Show time until the next diamond/emerald generation",
   "hbwhelper.configGui.showTeamUpgrades.title": "Show team upgrades",
   "hbwhelper.configGui.showTeamUpgrades.description": "Show team upgrades your team has unlocked",
+  "hbwhelper.configGui.debugChatMessages.title": "Debug chat messages",
+  "hbwhelper.configGui.debugChatMessages.description": "Logs formatted chat messages. You probably don't want this enabled.",
   "hbwhelper.configGui.unselected": "Unselected",
   "hbwhelper.dream.rush": "Rush",
   "hbwhelper.dream.ultimate": "Ultimate",
