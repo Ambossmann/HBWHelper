@@ -56,6 +56,9 @@ public class GameDetector {
     /** Prompt client received in chat when a Bed Wars game in Lucky Blocks Mode starts */
     private static final String LUCKY_BLOCKS_START_TEXT = "§f§lBed Wars Lucky Blocks§r";
 
+    /** Prompt client received in chat when a Bed Wars game in Swappage Mode starts */
+    private static final String SWAPPAGE_START_TEXT = "§f§lBed Wars Swappage§r";
+
     /** Prompt client received in chat when it rejoins a game */
     private static final String REJOIN_TEXT = "§e§lTo leave Bed Wars, type /lobby§r";
 
@@ -163,7 +166,8 @@ public class GameDetector {
             if (formattedMessage.contains(ORDINARY_START_TEXT)
                     || formattedMessage.contains(RUSH_START_TEXT)
                     || formattedMessage.contains(ULTIMATE_START_TEXT)
-                    || formattedMessage.contains(LUCKY_BLOCKS_START_TEXT)) {
+                    || formattedMessage.contains(LUCKY_BLOCKS_START_TEXT)
+                    || formattedMessage.contains(SWAPPAGE_START_TEXT)) {
                 // A Bed Wars game starts
                 inBedWars = true;
                 GameEvent.GAME_START.invoker().start();
